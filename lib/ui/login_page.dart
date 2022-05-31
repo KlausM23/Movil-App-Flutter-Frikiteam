@@ -1,4 +1,5 @@
 import 'package:app_flutter_frikiteam/ui/friki_main.dart';
+import 'package:app_flutter_frikiteam/ui/organizer_main.dart';
 import 'package:app_flutter_frikiteam/ui/register_page.dart';
 import 'package:flutter/material.dart';
 
@@ -171,7 +172,9 @@ class _LoginPageState extends State<LoginPage> {
                                 );
                                 print("Vista usuario friki");
                               }else if (_userType == "Organizador"){
-                                //redirige hacia la vista organizador
+                                Navigator.push(
+                                    context, 
+                                    MaterialPageRoute(builder: (context) => const MainOrganizer()));
                                 print("Vista organizador");
                               }else{
                                 print("Escoga un tipo de usuario");

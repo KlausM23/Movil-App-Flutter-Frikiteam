@@ -62,10 +62,7 @@ class _MainOrganizerState extends State<MainOrganizer> {
             setState(() {});
           },
           animationDuration: Duration(milliseconds: 400),
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/organizer-view
         ),
         ),
       )

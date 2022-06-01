@@ -74,7 +74,6 @@ class EventListItem extends StatelessWidget {
                 ]
             )
         ),
-
         child: Align(
           alignment: Alignment.bottomCenter,
           child: Text(

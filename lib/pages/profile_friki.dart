@@ -1,8 +1,10 @@
+import 'package:app_flutter_frikiteam/pages/search_friki.dart';
 import 'package:app_flutter_frikiteam/ui/login_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app_flutter_frikiteam/model/Friki.dart';
 import 'package:app_flutter_frikiteam/model/Organizer.dart';
+import 'package:app_flutter_frikiteam/model/Event.dart';
 class ProfileFriki extends StatefulWidget {
   const ProfileFriki({Key? key}) : super(key: key);
   @override
@@ -10,6 +12,11 @@ class ProfileFriki extends StatefulWidget {
 }
 
 class _ProfileFrikiState extends State<ProfileFriki> {
+  static List<Event> eventsFollow=[
+    Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg"),
+    Event("Otaku Fest", "https://i.ytimg.com/vi/_tI92lcuN7A/maxresdefault.jpg"),
+  ];
+
   static Friki friki=new Friki("Renzo", "Romero", "https://t2.pb.ltmcdn.com/es/posts/3/0/1/como_saber_si_le_gustas_a_una_persona_por_whatsapp_5103_orig.jpg","sergiogg1259@gmail.com","123456789");
   bool edit=false;
   bool showPassword=false;
@@ -114,7 +121,7 @@ class _ProfileFrikiState extends State<ProfileFriki> {
             SizedBox(height: 10,),
             Container(
               child:edit==true?inputs():
-              Text(friki.name+" "+friki.lastName,textAlign: TextAlign.center,style: TextStyle(fontSize: 18),)
+              Text(nameEdit+" "+lastNameEdit,textAlign: TextAlign.center,style: TextStyle(fontSize: 18),)
             ),
             SizedBox(height: 20,),
             Text("Organizadores Seguidos", style: TextStyle(color: Colors.purple,
@@ -123,7 +130,7 @@ class _ProfileFrikiState extends State<ProfileFriki> {
             SizedBox(height: 10,),
             Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height*0.15,
+              height: MediaQuery.of(context).size.height*0.12,
               color:Colors.purple,
               padding: EdgeInsets.only(top: 5,bottom: 5),
               child: ListView.builder(
@@ -134,6 +141,21 @@ class _ProfileFrikiState extends State<ProfileFriki> {
                 },
                 itemCount: organizers.length,
               ),
+            ),
+            SizedBox(height: 10,),
+            Text("Eventos Seguidos", style: TextStyle(color: Colors.purple,
+                fontSize: 25.0,
+                fontWeight: FontWeight.bold)),
+            SizedBox(height: 10,),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height*0.2,
+              child:  ListView.builder(
+                  itemBuilder: (context,index) {
+                    final event=eventsFollow[index];
+                    return EventListItem(event);
+                  },
+                  itemCount: eventsFollow.length)
             ),
           ],
         )
@@ -268,6 +290,58 @@ class _ProfileFrikiState extends State<ProfileFriki> {
               )
             ),
           ),
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            OutlinedButton(
+              onPressed: (){
+                edit=!edit;
+                setState(() {
+                  myControllerEmail=TextEditingController(text: emailEdit);
+                  myControllerPassword=TextEditingController(text: passwordEdit);
+                  myControllerName=TextEditingController(text: nameEdit);
+                  myControllerLastName=TextEditingController(text: lastNameEdit);
+                  showPassword=false;
+                });
+              },
+              child: Text("Cancel",style: TextStyle(
+                fontSize:18,
+                letterSpacing: 2,
+                color: Colors.purple,
+              ),),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(width: 2,color: Colors.purple),
+                padding: EdgeInsets.symmetric(horizontal: 50),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+              ),
+            ),
+            ElevatedButton(
+                onPressed: (){
+                  edit=!edit;
+                  setState(() {
+                    nameEdit=myControllerName.text;
+                    lastNameEdit=myControllerLastName.text;
+                    emailEdit=myControllerEmail.text;
+                    passwordEdit=myControllerPassword.text;
+                  });
+                },
+                child:Text("Save",style: TextStyle(
+                  fontSize:18,
+                  letterSpacing: 2,
+                  color: Colors.white,
+               ),
+             ),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.purple,
+                padding: EdgeInsets.symmetric(horizontal: 50),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+              ),
+            )
+          ],
         )
       ],
     );

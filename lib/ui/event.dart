@@ -14,16 +14,41 @@ class EventPage extends StatefulWidget {
 
 class _EventPageState extends State<EventPage> {
   bool assist=false;
-  static Event event= new Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",100.0);
-  static String titleEvent= event.title;
-  static String imgEvent=event.img;
-  static double priceEvent=event.price;
-  static DescriptionEvent descriptionEvent=new DescriptionEvent('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tristique velit ut viverra ornare. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nam facilisis egestas turpis, fringilla consequat sem egestas a. Vestibulum sed ante hendrerit, scelerisque tortor a, tincidunt leo. Maecenas eget arcu commodo, imperdiet lorem non, commodo nibh. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi libero nisl, mollis id accumsan vitae, rhoncus a nulla. Quisque vel mattis ex, a gravida erat. Nam euismod risus in elit blandit, ut porta eros eleifend. In posuere volutpat turpis a tempus.Morbi tincidunt tincidunt libero eget condimentum. Integer magna ipsum, consectetur in scelerisque at, pellentesque et nisi. Praesent facilisis aliquam purus non dignissim. Maecenas cursus orci ut luctus dignissim. Nunc sed mi egestas, dignissim odio imperdiet, viverra magna. Mauris id ante dolor. Sed congue eros eget egestas tincidunt. Nam at accumsan dui. Duis ac nisi et diam tincidunt efficitur eu sit amet justo. Ut ac ligula accumsan, vehicula urna a, commodo ante. Ut egestas urna at elit vehicula, vel rutrum erat tempor. Vivamus nec augue pretium, varius enim sed, faucibus velit. Praesent et neque quam.','https://firebasestorage.googleapis.com/v0/b/prueba-43bf8.appspot.com/o/images%2Ffriki%20festival%20informacion%201.jpg?alt=media&token=d6200696-0b53-4488-bd1a-9740c269112c');
-  static String description=descriptionEvent.description;
-  static String imgDescription=descriptionEvent.img;
-  static Local local=new Local("Plaza Mole del sur 760");
-  static String localAddress=local.address;
-  static Organizer organizer=new Organizer("Luciana","Herrera","https://portal.andina.pe/EDPfotografia3/Thumbnail/2022/03/08/000851626W.jpg","lucia@gmail.com","lucia789");
+  String titleEvent= "hola";
+  String imgEvent="event.img";
+  double priceEvent=0.0;
+  String description="descriptionEvent.description";
+  String imgDescription="descriptionEvent.img";
+  String localAddress="local.address";
+  String imgOrganizer="a";
+  String nameOrganizer="a";
+  String lastNameOrganizer="a";
+  void getData() async{
+
+     Event event= new Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",100.0);
+
+     titleEvent=event.title;
+     imgEvent=event.img;
+     priceEvent=event.price;
+
+     DescriptionEvent descriptionEvent=new DescriptionEvent('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tristique velit ut viverra ornare. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nam facilisis egestas turpis, fringilla consequat sem egestas a. Vestibulum sed ante hendrerit, scelerisque tortor a, tincidunt leo. Maecenas eget arcu commodo, imperdiet lorem non, commodo nibh. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi libero nisl, mollis id accumsan vitae, rhoncus a nulla. Quisque vel mattis ex, a gravida erat. Nam euismod risus in elit blandit, ut porta eros eleifend. In posuere volutpat turpis a tempus.Morbi tincidunt tincidunt libero eget condimentum. Integer magna ipsum, consectetur in scelerisque at, pellentesque et nisi. Praesent facilisis aliquam purus non dignissim. Maecenas cursus orci ut luctus dignissim. Nunc sed mi egestas, dignissim odio imperdiet, viverra magna. Mauris id ante dolor. Sed congue eros eget egestas tincidunt. Nam at accumsan dui. Duis ac nisi et diam tincidunt efficitur eu sit amet justo. Ut ac ligula accumsan, vehicula urna a, commodo ante. Ut egestas urna at elit vehicula, vel rutrum erat tempor. Vivamus nec augue pretium, varius enim sed, faucibus velit. Praesent et neque quam.','https://firebasestorage.googleapis.com/v0/b/prueba-43bf8.appspot.com/o/images%2Ffriki%20festival%20informacion%201.jpg?alt=media&token=d6200696-0b53-4488-bd1a-9740c269112c');
+
+     description=descriptionEvent.description;
+     imgDescription=descriptionEvent.img;
+
+     Local local=new Local("Plaza Mole del sur 760");
+     localAddress=local.address;
+
+     Organizer organizer=new Organizer("Luciana","Herrera","https://portal.andina.pe/EDPfotografia3/Thumbnail/2022/03/08/000851626W.jpg","lucia@gmail.com","lucia789");
+     imgOrganizer=organizer.img;
+     nameOrganizer=organizer.name;
+     lastNameOrganizer=organizer.lastName;
+  }
+  @override
+  void initState() {
+    this.getData();
+    super.initState();
+  }
 
 
   @override
@@ -134,7 +159,7 @@ class _EventPageState extends State<EventPage> {
                       style: TextStyle(fontSize: 20, color: Colors.black)),
                   const SizedBox(height: 20),
                   _organizador(),
-                  Text(organizer.name+" "+organizer.lastName,
+                  Text(nameOrganizer+" "+lastNameOrganizer,
                       style: TextStyle(fontSize: 20, color: Colors.black)),
                   const SizedBox(height: 30),
                   _asistirButton(),
@@ -197,14 +222,14 @@ class _EventPageState extends State<EventPage> {
     return CircleAvatar(
       radius: 50,
       backgroundImage: NetworkImage(
-         organizer.img),
+         imgOrganizer),
     );
   }
 
   Widget _asistirButton() {
     return ElevatedButton(
       onPressed: () {
-        priceEvent=event.price;
+
         setState(() {
           showModalBottomSheet(
               context: context,

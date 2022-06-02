@@ -1,3 +1,4 @@
+import 'package:app_flutter_frikiteam/ui/event.dart';
 import 'package:flutter/material.dart';
 import 'package:app_flutter_frikiteam/model/Event.dart';
 class SearchFriki extends StatefulWidget {
@@ -10,10 +11,10 @@ class SearchFriki extends StatefulWidget {
 class _SearchFrikiState extends State<SearchFriki> {
 
   static List<Event> eventsSearch=[
-    Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg"),
-    Event("Otaku Fest", "https://i.ytimg.com/vi/_tI92lcuN7A/maxresdefault.jpg"),
-    Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg"),
-    Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg"),
+    Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",20),
+    Event("Otaku Fest", "https://i.ytimg.com/vi/_tI92lcuN7A/maxresdefault.jpg",10),
+    Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",50),
+    Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",50),
   ];
   List<Event>eventsList=List.from(eventsSearch);
   void updateList(String value){
@@ -77,34 +78,42 @@ class EventListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 150,
-      margin: EdgeInsets.only(bottom: 15),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        image: DecorationImage(
-            image: NetworkImage(event.img),
-            fit: BoxFit.fill
-        ),
-      ),
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context)=> const EventPage())
+        );
+      },
       child: Container(
-        padding: const EdgeInsets.all(20),
+        height: 150,
+        margin: EdgeInsets.only(bottom: 15),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [
-                  Colors.black.withOpacity(0.7),
-                  Colors.transparent
-                ]
-            )
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          image: DecorationImage(
+              image: NetworkImage(event.img),
+              fit: BoxFit.fill
+          ),
         ),
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: Text(
-              event.title,style: TextStyle(color: Colors.white,
-              fontSize:15,letterSpacing: 10,fontWeight: FontWeight.w700)
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    Colors.black.withOpacity(0.7),
+                    Colors.transparent
+                  ]
+              )
+          ),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Text(
+                event.title,style: TextStyle(color: Colors.white,
+                fontSize:15,letterSpacing: 10,fontWeight: FontWeight.w700)
+            ),
           ),
         ),
       ),

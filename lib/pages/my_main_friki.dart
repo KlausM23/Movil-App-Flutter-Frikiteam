@@ -1,3 +1,4 @@
+import 'package:app_flutter_frikiteam/ui/event.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:app_flutter_frikiteam/model/Event.dart';
@@ -15,10 +16,10 @@ class _MyMainFrikiState extends State<MyMainFriki> {
     "https://i.ytimg.com/vi/N81TlsMT2so/maxresdefault.jpg"
   ];
   List<Event> events=[
-    Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg"),
-    Event("Otaku Fest", "https://i.ytimg.com/vi/_tI92lcuN7A/maxresdefault.jpg"),
-    Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg"),
-    Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg"),
+    Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",10),
+    Event("Otaku Fest", "https://i.ytimg.com/vi/_tI92lcuN7A/maxresdefault.jpg",30),
+    Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",10),
+    Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",20),
   ];
   @override
   Widget build(BuildContext context) {
@@ -85,32 +86,41 @@ class EventItem extends StatelessWidget {
   const EventItem(this.event,{Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1/1,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-          image: DecorationImage(
-              image: NetworkImage(event.img),
-              fit: BoxFit.fill
-          ),
-        ),
+    return GestureDetector(
+      onTap: (){
+        /*Navigator.pushNamed(context,'/event');*/
+        Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context)=> const EventPage())
+        );
+      },
+      child: AspectRatio(
+        aspectRatio: 1/1,
         child: Container(
-          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              gradient: LinearGradient(
-                  begin: Alignment.bottomRight,
-                  colors: [
-                    Colors.black.withOpacity(.9),
-                    Colors.black.withOpacity(.2)
-                  ]
-              )
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+            image: DecorationImage(
+                image: NetworkImage(event.img),
+                fit: BoxFit.fill
+            ),
           ),
-          child: Align(
-            alignment: Alignment.bottomLeft,
-            child: Text(
-                event.title,style: TextStyle(color: Colors.white,fontSize:20)
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                gradient: LinearGradient(
+                    begin: Alignment.bottomRight,
+                    colors: [
+                      Colors.black.withOpacity(.9),
+                      Colors.black.withOpacity(.2)
+                    ]
+                )
+            ),
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Text(
+                  event.title,style: TextStyle(color: Colors.white,fontSize:20)
+              ),
             ),
           ),
         ),

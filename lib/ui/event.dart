@@ -1,5 +1,10 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'dart:ffi';
+
+import 'package:app_flutter_frikiteam/model/DescriptionEvent.dart';
+import 'package:app_flutter_frikiteam/model/Local.dart';
+import 'package:app_flutter_frikiteam/model/Organizer.dart';
 import 'package:flutter/material.dart';
+import 'package:app_flutter_frikiteam/model/Event.dart';
 
 class EventPage extends StatefulWidget {
   const EventPage({Key? key}) : super(key: key);
@@ -9,8 +14,19 @@ class EventPage extends StatefulWidget {
 }
 
 class _EventPageState extends State<EventPage> {
-  int currentPge = 1;
-  final PageController pageController = PageController(initialPage: 1);
+  bool assist=false;
+  static Event event= new Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",20.0);
+  static String titleEvent= event.title;
+  static String imgEvent=event.img;
+  final double priceEvent=event.price;
+  static DescriptionEvent descriptionEvent=new DescriptionEvent('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tristique velit ut viverra ornare. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nam facilisis egestas turpis, fringilla consequat sem egestas a. Vestibulum sed ante hendrerit, scelerisque tortor a, tincidunt leo. Maecenas eget arcu commodo, imperdiet lorem non, commodo nibh. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi libero nisl, mollis id accumsan vitae, rhoncus a nulla. Quisque vel mattis ex, a gravida erat. Nam euismod risus in elit blandit, ut porta eros eleifend. In posuere volutpat turpis a tempus.Morbi tincidunt tincidunt libero eget condimentum. Integer magna ipsum, consectetur in scelerisque at, pellentesque et nisi. Praesent facilisis aliquam purus non dignissim. Maecenas cursus orci ut luctus dignissim. Nunc sed mi egestas, dignissim odio imperdiet, viverra magna. Mauris id ante dolor. Sed congue eros eget egestas tincidunt. Nam at accumsan dui. Duis ac nisi et diam tincidunt efficitur eu sit amet justo. Ut ac ligula accumsan, vehicula urna a, commodo ante. Ut egestas urna at elit vehicula, vel rutrum erat tempor. Vivamus nec augue pretium, varius enim sed, faucibus velit. Praesent et neque quam.','https://firebasestorage.googleapis.com/v0/b/prueba-43bf8.appspot.com/o/images%2Ffriki%20festival%20informacion%201.jpg?alt=media&token=d6200696-0b53-4488-bd1a-9740c269112c');
+  static String description=descriptionEvent.description;
+  static String imgDescription=descriptionEvent.img;
+  static Local local=new Local("Plaza Mole del sur 760");
+  static String localAddress=local.address;
+  static Organizer organizer=new Organizer("Luciana","Herrera","https://portal.andina.pe/EDPfotografia3/Thumbnail/2022/03/08/000851626W.jpg","lucia@gmail.com","lucia789");
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,19 +58,44 @@ class _EventPageState extends State<EventPage> {
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Stack(
               children: [
-                const Center(
-                    child: Text(
-                  'Overflow Festival',
-                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                 Center(
+                    child: Text(titleEvent, style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
                 )),
                 Positioned(
                   top: 3,
                   left: -18,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: const Text('Seguir'),
+                  child: assist?OutlinedButton(
+                    onPressed: (){
+                      assist=!assist;
+                      setState(() {
+                      });
+                    },
+                    child: Text("UnFollow",style: TextStyle(
+                      fontSize:16,
+                      letterSpacing: 1,
+                      color: Color.fromARGB(255, 209, 108, 14),
+                    ),),
+                    style: OutlinedButton.styleFrom(
+                        side: BorderSide(width: 2,color: Colors.purple),
+                        padding: EdgeInsets.symmetric(horizontal: 6),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+                    ),
+                  ):ElevatedButton(
+                    onPressed: (){
+                      assist=!assist;
+                      setState(() {
+                      });
+                    },
+                    child:Text("Follow",style: TextStyle(
+                      fontSize:16,
+                      letterSpacing: 2,
+                      color: Colors.white,
+                    ),
+                    ),
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 209, 108, 14),
+                        primary: Color.fromARGB(255, 209, 108, 14),
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
                     ),
                   ),
                 ),
@@ -79,21 +120,22 @@ class _EventPageState extends State<EventPage> {
                   const Text('Información',
                       style: TextStyle(fontSize: 20, color: Colors.black)),
                   const SizedBox(height: 20),
-                  const Center(
+                   Center(
                     child: Text(
-                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tristique velit ut viverra ornare. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nam facilisis egestas turpis, fringilla consequat sem egestas a. Vestibulum sed ante hendrerit, scelerisque tortor a, tincidunt leo. Maecenas eget arcu commodo, imperdiet lorem non, commodo nibh. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi libero nisl, mollis id accumsan vitae, rhoncus a nulla. Quisque vel mattis ex, a gravida erat. Nam euismod risus in elit blandit, ut porta eros eleifend. In posuere volutpat turpis a tempus.Morbi tincidunt tincidunt libero eget condimentum. Integer magna ipsum, consectetur in scelerisque at, pellentesque et nisi. Praesent facilisis aliquam purus non dignissim. Maecenas cursus orci ut luctus dignissim. Nunc sed mi egestas, dignissim odio imperdiet, viverra magna. Mauris id ante dolor. Sed congue eros eget egestas tincidunt. Nam at accumsan dui. Duis ac nisi et diam tincidunt efficitur eu sit amet justo. Ut ac ligula accumsan, vehicula urna a, commodo ante. Ut egestas urna at elit vehicula, vel rutrum erat tempor. Vivamus nec augue pretium, varius enim sed, faucibus velit. Praesent et neque quam.'),
+                      description
+                    ),
                   ),
                   _promotionalImage(),
                   const Text('Ubicación',
                       style: TextStyle(fontSize: 20, color: Colors.black)),
                   const SizedBox(height: 20),
-                  Text('Esqui. Av Tomás valle con Auxiliar y bla bla bla :u'),
+                  Text(localAddress),
                   const SizedBox(height: 20),
                   const Text('Organizador',
                       style: TextStyle(fontSize: 20, color: Colors.black)),
                   const SizedBox(height: 20),
                   _organizador(),
-                  Text('HentaiLa',
+                  Text(organizer.name+" "+organizer.lastName,
                       style: TextStyle(fontSize: 20, color: Colors.black)),
                   const SizedBox(height: 30),
                   _asistirButton(),
@@ -104,24 +146,7 @@ class _EventPageState extends State<EventPage> {
           )
         ],
       ),
-      bottomNavigationBar: Theme(
-        data: Theme.of(context)
-            .copyWith(iconTheme: IconThemeData(color: Colors.white)),
-        child: CurvedNavigationBar(
-          index: currentPge,
-          backgroundColor: Colors.transparent,
-          items: <Widget>[
-            const Icon(Icons.search, size: 30),
-            const Icon(Icons.home, size: 30),
-            const Icon(Icons.person_rounded, size: 30),
-          ],
-          color: const Color(0xFF65295F),
-          onTap: (index) {
-            null;
-          },
-          animationDuration: Duration(milliseconds: 400),
-        ),
-      ),
+
     );
   }
 
@@ -130,7 +155,7 @@ class _EventPageState extends State<EventPage> {
         height: 200,
         width: double.infinity,
         child: Image.network(
-            'https://i0.wp.com/www.teragames.com.mx/wp-content/uploads/2020/01/Overflow.jpg?fit=1280%2C672&ssl=1',
+            imgEvent,
             fit: BoxFit.cover));
   }
 
@@ -140,7 +165,7 @@ class _EventPageState extends State<EventPage> {
       height: 150,
       width: double.infinity,
       child: Image.network(
-          'https://image.tmdb.org/t/p/w780/5zmZTLIoXwLljviFeyOw9S3CZqf.jpg',
+          imgDescription,
           fit: BoxFit.cover),
     );
   }
@@ -152,7 +177,7 @@ class _EventPageState extends State<EventPage> {
       itemBuilder: (BuildContext context, int index) {
         return _itemItinerario();
       },
-      itemCount: 5,
+      itemCount: 1,
     );
   }
 
@@ -173,7 +198,7 @@ class _EventPageState extends State<EventPage> {
     return CircleAvatar(
       radius: 50,
       backgroundImage: NetworkImage(
-          'https://i1.sndcdn.com/artworks-000216272705-8tjvzn-t500x500.jpg'),
+         organizer.img),
     );
   }
 
@@ -212,7 +237,7 @@ class _EventPageState extends State<EventPage> {
           Column(
             children: [
               Text(
-                'Precio : S/ 500.00',
+                priceEvent.toString(),
                 style:
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),

@@ -1,3 +1,4 @@
+import 'package:app_flutter_frikiteam/ui/event.dart';
 import 'package:app_flutter_frikiteam/ui/login_page.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +16,11 @@ class MyApp extends StatelessWidget {
       title: "FrikiTeam App",
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
-      home: const LoginPage(),
+      initialRoute: '/login',
+      routes: {
+        '/login':(context)=>const LoginPage(),
+        '/event':(context)=>const EventPage(),
+      },
     ) ;
   }
 }

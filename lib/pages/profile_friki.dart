@@ -13,8 +13,8 @@ class ProfileFriki extends StatefulWidget {
 
 class _ProfileFrikiState extends State<ProfileFriki> {
   static List<Event> eventsFollow=[
-    Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg"),
-    Event("Otaku Fest", "https://i.ytimg.com/vi/_tI92lcuN7A/maxresdefault.jpg"),
+    Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",20),
+    Event("Otaku Fest", "https://i.ytimg.com/vi/_tI92lcuN7A/maxresdefault.jpg",20),
   ];
 
   static Friki friki=new Friki("Renzo", "Romero", "https://t2.pb.ltmcdn.com/es/posts/3/0/1/como_saber_si_le_gustas_a_una_persona_por_whatsapp_5103_orig.jpg","sergiogg1259@gmail.com","123456789");

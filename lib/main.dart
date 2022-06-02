@@ -1,4 +1,5 @@
 import 'package:app_flutter_frikiteam/ui/event.dart';
+import 'package:app_flutter_frikiteam/ui/friki_main.dart';
 import 'package:app_flutter_frikiteam/ui/login_page.dart';
 import 'package:flutter/material.dart';
 
@@ -17,9 +18,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
       initialRoute: '/login',
-      routes: {
-        '/login':(context)=>const LoginPage(),
-        '/event':(context)=>const EventPage(),
+      routes: <String, WidgetBuilder> {
+        '/login': (BuildContext context) => new LoginPage(),
+        '/friki': (BuildContext context) => new MainFriki(),
+        '/event' : (BuildContext context) => new EventPage(),
       },
     ) ;
   }

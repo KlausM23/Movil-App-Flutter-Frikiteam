@@ -165,10 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                               print("User type: " + _userType);
 
                               if(_userType == "Usuario Friki"){
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context)=> const MainFriki())
-                                );
+                                Navigator.of(context).pushNamed('/friki');
                                 print("Vista usuario friki");
                               }else if (_userType == "Organizador"){
                                 //redirige hacia la vista organizador

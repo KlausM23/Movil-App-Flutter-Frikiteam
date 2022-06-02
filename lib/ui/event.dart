@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:app_flutter_frikiteam/model/DescriptionEvent.dart';
 import 'package:app_flutter_frikiteam/model/Local.dart';
@@ -15,10 +14,10 @@ class EventPage extends StatefulWidget {
 
 class _EventPageState extends State<EventPage> {
   bool assist=false;
-  static Event event= new Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",20.0);
+  static Event event= new Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",100.0);
   static String titleEvent= event.title;
   static String imgEvent=event.img;
-  final double priceEvent=event.price;
+  static double priceEvent=event.price;
   static DescriptionEvent descriptionEvent=new DescriptionEvent('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tristique velit ut viverra ornare. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nam facilisis egestas turpis, fringilla consequat sem egestas a. Vestibulum sed ante hendrerit, scelerisque tortor a, tincidunt leo. Maecenas eget arcu commodo, imperdiet lorem non, commodo nibh. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi libero nisl, mollis id accumsan vitae, rhoncus a nulla. Quisque vel mattis ex, a gravida erat. Nam euismod risus in elit blandit, ut porta eros eleifend. In posuere volutpat turpis a tempus.Morbi tincidunt tincidunt libero eget condimentum. Integer magna ipsum, consectetur in scelerisque at, pellentesque et nisi. Praesent facilisis aliquam purus non dignissim. Maecenas cursus orci ut luctus dignissim. Nunc sed mi egestas, dignissim odio imperdiet, viverra magna. Mauris id ante dolor. Sed congue eros eget egestas tincidunt. Nam at accumsan dui. Duis ac nisi et diam tincidunt efficitur eu sit amet justo. Ut ac ligula accumsan, vehicula urna a, commodo ante. Ut egestas urna at elit vehicula, vel rutrum erat tempor. Vivamus nec augue pretium, varius enim sed, faucibus velit. Praesent et neque quam.','https://firebasestorage.googleapis.com/v0/b/prueba-43bf8.appspot.com/o/images%2Ffriki%20festival%20informacion%201.jpg?alt=media&token=d6200696-0b53-4488-bd1a-9740c269112c');
   static String description=descriptionEvent.description;
   static String imgDescription=descriptionEvent.img;
@@ -205,11 +204,21 @@ class _EventPageState extends State<EventPage> {
   Widget _asistirButton() {
     return ElevatedButton(
       onPressed: () {
-        showModalBottomSheet(
-            context: context,
-            builder: (BuildContext context) {
-              return _modalBottom();
-            });
+        priceEvent=event.price;
+        setState(() {
+          showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                /*return _modalBottom();*/
+                return StatefulBuilder(
+                    builder: (BuildContext context,StateSetter setState ){
+
+                      return _modalBottom();
+                    }
+                );
+              });
+        });
+
       },
       style: ElevatedButton.styleFrom(
         primary: Color.fromARGB(255, 209, 108, 14),
@@ -228,6 +237,7 @@ class _EventPageState extends State<EventPage> {
   }
 
   Widget _modalBottom() {
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       height: 400,
@@ -277,6 +287,9 @@ class _EventPageState extends State<EventPage> {
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
+                  setState(() {
+
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Color.fromARGB(255, 209, 108, 14),

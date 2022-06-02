@@ -88,7 +88,7 @@ class EventItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        /*Navigator.pushNamed(context,'/event');*/
+        /*Navigator.of(context).pushNamed('/event');*/
         Navigator.push(
             context,
             MaterialPageRoute(builder: (context)=> const EventPage())

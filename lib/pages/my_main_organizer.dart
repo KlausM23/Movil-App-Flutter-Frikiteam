@@ -11,8 +11,8 @@ class MyMainOrganizer extends StatefulWidget {
 class _MyMainOrganizerState extends State<MyMainOrganizer> {
 
   List<Event> events=[
-    Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg"),
-    Event("Otaku Fest", "https://i.ytimg.com/vi/_tI92lcuN7A/maxresdefault.jpg"),
+    Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",100.0),
+    Event("Otaku Fest", "https://i.ytimg.com/vi/_tI92lcuN7A/maxresdefault.jpg",50.0),
   ];
 
   @override

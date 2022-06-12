@@ -12,9 +12,9 @@ class MainOrganizer extends StatefulWidget {
 }
 
 class _MainOrganizerState extends State<MainOrganizer> {
-  int currentPage = 1;
+  int currentPage = 0;
 
-  final PageController pageController = PageController(initialPage: 1);
+  final PageController pageController = PageController(initialPage: 0);
 
   @override
   Widget build(BuildContext context) {

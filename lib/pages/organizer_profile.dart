@@ -109,14 +109,15 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
                   ],
                 ),
               ),
-              SizedBox(height: 10,),
+              SizedBox(height: 8,),
               Container(
                   child: edit == true ? inputs():
-                  Text(organizer.name+" "+organizer.lastName,textAlign: TextAlign.center,style: TextStyle(fontSize: 18),)
+                  Text(nameEdit+" "+lastNameEdit,textAlign: TextAlign.center,style: TextStyle(fontSize: 18),)
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 8,
+              ),
 
-              SizedBox(height: 10,),
             ],
           )
       ),
@@ -128,7 +129,7 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
       children: [
         Text("Name:",style: TextStyle(color: Colors.black45,fontSize: 20,)),
         SizedBox(
-          height: 10,
+          height: 8,
         ),
         Container(
           alignment: Alignment.centerLeft,
@@ -155,11 +156,11 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
           ),
         ),
         SizedBox(
-          height: 10,
+          height:8,
         ),
         Text("Last Name:",style: TextStyle(color: Colors.black45,fontSize: 20,)),
         SizedBox(
-          height: 10,
+          height: 8,
         ),
         Container(
           alignment: Alignment.centerLeft,
@@ -186,11 +187,11 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
           ),
         ),
         SizedBox(
-          height: 10,
+          height: 8,
         ),
         Text("Email:",style: TextStyle(color: Colors.black45,fontSize: 20,)),
         SizedBox(
-          height: 10,
+          height:8,
         ),
         Container(
           alignment: Alignment.centerLeft,
@@ -217,7 +218,7 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
           ),
         ),
         SizedBox(
-          height: 10,
+          height: 8,
         ),
         Text("Contraseña:",style: TextStyle(color: Colors.black45,fontSize: 20,)),
         Container(
@@ -250,6 +251,56 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
                 )
             ),
           ),
+        ),
+        SizedBox( height: 8,),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            OutlinedButton(
+              onPressed: (){
+                edit=!edit;
+                setState(() {
+                  myControllerEmail=TextEditingController(text: emailEdit);
+                  myControllerPassword=TextEditingController(text: passwordEdit);
+                  myControllerName=TextEditingController(text: nameEdit);
+                  myControllerLastName=TextEditingController(text: lastNameEdit);
+                  showPassword=false;
+                });
+              },
+              child: Text("Cancel",style: TextStyle(
+                fontSize:18,
+                letterSpacing: 2,
+                color: Colors.purple,
+              ),),
+              style: OutlinedButton.styleFrom(
+                  side: BorderSide(width: 2,color: Colors.purple),
+                  padding: EdgeInsets.symmetric(horizontal: 50),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+              ),
+            ),
+            ElevatedButton(
+              onPressed: (){
+                edit=!edit;
+                setState(() {
+                  nameEdit=myControllerName.text;
+                  lastNameEdit=myControllerLastName.text;
+                  emailEdit=myControllerEmail.text;
+                  passwordEdit=myControllerPassword.text;
+                });
+              },
+              child:Text("Save",style: TextStyle(
+                fontSize:18,
+                letterSpacing: 2,
+                color: Colors.white,
+              ),
+              ),
+              style: ElevatedButton.styleFrom(
+                  primary: Colors.purple,
+                  padding: EdgeInsets.symmetric(horizontal: 50),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+              ),
+            )
+          ],
         )
       ],
     );

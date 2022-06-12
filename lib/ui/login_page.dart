@@ -1,7 +1,9 @@
-import 'package:app_flutter_frikiteam/ui/friki_main.dart';
+import 'package:app_flutter_frikiteam/model/UserFriki.dart';
 import 'package:app_flutter_frikiteam/ui/organizer_main.dart';
 import 'package:app_flutter_frikiteam/ui/register_page.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -18,6 +20,51 @@ class _LoginPageState extends State<LoginPage> {
   String _email = "";
   String _password = "";
   String _userType = "Tipo de usuario";
+  bool _emailVerification = false;
+  bool _passwordVerification = false;
+
+  // url para obtener todos los usuarios registrados de usuario friki
+  String urlFriki = "https://api-frikiteam.herokuapp.com/api/customers?offset=0&sort[sorted]=true&sort[unsorted]=true&sort[empty]=true&pageNumber=0&pageSize=0&paged=true&unpaged=true";
+  String urlOrganizer = "https://api-frikiteam.herokuapp.com/api/organizers?offset=0&sort[sorted]=true&sort[unsorted]=true&sort[empty]=true&pageNumber=0&pageSize=0&paged=true&unpaged=true";
+
+  List dataRequestFriki = [];
+  List dataRequestOrganizer = [];
+
+  Future<String> makeRequestFriki() async{
+    var response = await http.get(Uri.parse(urlFriki),
+        headers: {'Accept': 'application/json'});
+
+    var extractData = json.decode(response.body);
+    dataRequestFriki = extractData['content'];
+    /*print("\n--USUARIOS FRIKIS--");
+    for (int i = 0; i < dataRequestFriki.length; i++){
+      print("Id: " + dataRequestFriki[i]["id"].toString());
+      print("Usuario: " + dataRequestFriki[i]["firstName"]);
+      print("Email: " + dataRequestFriki[i]["email"]);
+      print("Password: " + dataRequestFriki[i]["password"]);
+    }*/
+
+    return response.body;
+  }
+
+  Future<String> makeRequestOrganizer() async{
+    var response = await http.get(Uri.parse(urlOrganizer),
+        headers: {'Accept': 'application/json'});
+    //print(response.body);
+
+    var extractData = json.decode(response.body);
+    dataRequestOrganizer = extractData['content'];
+    /*
+    print("\n\n--USUARIOS ORGANIZADORES--");
+    for (int i = 0; i < dataRequestOrganizer.length; i++){
+      print("Id: " + dataRequestFriki[i]["id"].toString());
+      print("Usuario: " + dataRequestFriki[i]["firstName"]);
+      print("Email: " + dataRequestOrganizer[i]["email"]);
+      print("Password: " + dataRequestOrganizer[i]["password"]);
+    }*/
+
+    return response.body;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -163,16 +210,40 @@ class _LoginPageState extends State<LoginPage> {
                               _password = passwordController.text;
                               print("Email: " + _email);
                               print("Password: " + _password);
-                              print("User type: " + _userType);
+                              //print("User type: " + _userType);
 
+                              //print("Vista usuario friki");
                               if(_userType == "Usuario Friki"){
-                                Navigator.of(context).pushNamed('/friki');
-                                print("Vista usuario friki");
+
+                                makeRequestFriki();
+                                for (int i = 0; i < dataRequestFriki.length; i++){
+                                  if(_email == dataRequestFriki[i]["email"]){
+                                    _emailVerification = true;
+                                  }
+                                  if(_password == dataRequestFriki[i]["password"]){
+                                    _passwordVerification = true;
+                                  }
+                                }
+
+                                _passwordVerification && _emailVerification? Navigator.of(context).pushNamed('/friki') : print("Usuario y/o contraseña incorrectas. ");
+                                _passwordVerification = _emailVerification = false;
+
+                                //print("Vista organizador");
                               }else if (_userType == "Organizador"){
-                                Navigator.push(
-                                    context, 
-                                    MaterialPageRoute(builder: (context) => const MainOrganizer()));
-                                print("Vista organizador");
+
+                                makeRequestOrganizer();
+                                for (int i = 0; i < dataRequestOrganizer.length; i++){
+                                  if(_email == dataRequestOrganizer[i]["email"]){
+                                    _emailVerification = true;
+                                  }
+                                  if(_password == dataRequestOrganizer[i]["password"]){
+                                    _passwordVerification = true;
+                                  }
+                                }
+
+                                _passwordVerification && _emailVerification? Navigator.push(context, MaterialPageRoute(builder: (context) => const MainOrganizer())) : print("Usuario y/o contraseña incorrectas. ");
+                                _passwordVerification = _emailVerification = false;
+
                               }else{
                                 print("Escoga un tipo de usuario");
                               }

@@ -19,7 +19,7 @@ class _SearchFrikiState extends State<SearchFriki> {
   List<Event>eventsList=List.from(eventsSearch);
   void updateList(String value){
     setState(() {
-      eventsList=eventsSearch.where((element) => element.title!.toLowerCase().contains(value.toLowerCase())).toList();
+      eventsList=eventsSearch.where((element) => element.title.toLowerCase().contains(value.toLowerCase())).toList();
     });
   }
   @override

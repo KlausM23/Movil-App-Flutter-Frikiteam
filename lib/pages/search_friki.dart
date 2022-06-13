@@ -80,10 +80,11 @@ class EventListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(
+        /*Navigator.push(
             context,
             MaterialPageRoute(builder: (context)=> const EventPage())
-        );
+        );*/
+        Navigator.pushNamed(context, 'event');
       },
       child: Container(
         height: 150,

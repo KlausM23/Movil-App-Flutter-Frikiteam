@@ -89,10 +89,11 @@ class EventItem extends StatelessWidget {
     return GestureDetector(
       onTap: (){
         /*Navigator.of(context).pushNamed('/event');*/
-        Navigator.push(
+        /*Navigator.push(
             context,
             MaterialPageRoute(builder: (context)=> const EventPage())
-        );
+        );*/
+        Navigator.pushNamed(context, 'event');
       },
       child: AspectRatio(
         aspectRatio: 1/1,

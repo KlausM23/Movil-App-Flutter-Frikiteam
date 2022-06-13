@@ -38,6 +38,12 @@ class _MyMainOrganizerState extends State<MyMainOrganizer> {
                 },
                 itemCount: events.length)
             ),
+            FloatingActionButton(
+             onPressed: (){
+            //action code for button 2
+             },
+             backgroundColor: Color(0xFF65295F),
+             child: Icon(Icons.add),),
           ],
         ),
       ),
@@ -51,38 +57,43 @@ class EventListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 150,
-      margin: EdgeInsets.only(top: 15, bottom: 15),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        image: DecorationImage(
-            image: NetworkImage(event.img),
-            fit: BoxFit.fill
-        ),
-      ),
+    return GestureDetector(
+      onTap: (){
+        Navigator.pushNamed(context, 'eventOrganizer');
+      },
       child: Container(
-        padding: const EdgeInsets.all(20),
+        height: 150,
+        margin: EdgeInsets.only(top: 15, bottom: 15),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [
-                  Colors.black.withOpacity(0.7),
-                  Colors.transparent
-                ]
-            )
-        ),
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: Text(
-              event.title,style: TextStyle(color: Colors.white,
-              fontSize:15,letterSpacing: 7,fontWeight: FontWeight.w700)
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          image: DecorationImage(
+              image: NetworkImage(event.img),
+              fit: BoxFit.fill
           ),
         ),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    Colors.black.withOpacity(0.7),
+                    Colors.transparent
+                  ]
+              )
+          ),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Text(
+                event.title,style: TextStyle(color: Colors.white,
+                fontSize:15,letterSpacing: 7,fontWeight: FontWeight.w700)
+            ),
+          ),
 
 
+        ),
       ),
     );
   }

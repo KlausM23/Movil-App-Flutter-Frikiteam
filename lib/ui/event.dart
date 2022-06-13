@@ -25,7 +25,7 @@ class _EventPageState extends State<EventPage> {
   String lastNameOrganizer="a";
   void getData() async{
 
-     Event event= new Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",100.0);
+     Event event= new Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",50.0);
 
      titleEvent=event.title;
      imgEvent=event.img;

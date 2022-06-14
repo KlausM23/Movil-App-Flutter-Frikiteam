@@ -13,17 +13,19 @@ class EventOrganizer extends StatefulWidget {
 
 class _EventOrganizerState extends State<EventOrganizer> {
   bool editTitle=false;
+  bool editLocal=false;
+  bool editInfo=false;
   bool assist=false;
   static String titleEvent= "hola";
   String imgEvent="event.img";
   double priceEvent=0.0;
   String description="descriptionEvent.description";
   String imgDescription="descriptionEvent.img";
-  String localAddress="local.address";
+  static String localAddress="local.address";
   String imgOrganizer="a";
   String nameOrganizer="a";
   String lastNameOrganizer="a";
-  TextEditingController myControllerTitle = TextEditingController(text: titleEvent);
+
   void getData() async{
 
     Event event= new Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",50.0);
@@ -45,6 +47,7 @@ class _EventOrganizerState extends State<EventOrganizer> {
     nameOrganizer=organizer.name;
     lastNameOrganizer=organizer.lastName;
   }
+
   @override
   void initState() {
     this.getData();
@@ -53,6 +56,9 @@ class _EventOrganizerState extends State<EventOrganizer> {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController myControllerTitle = TextEditingController(text: titleEvent);
+    TextEditingController myControllerLocal = TextEditingController(text:localAddress);
+    TextEditingController myControllerInfo = TextEditingController(text:description);
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
@@ -92,7 +98,6 @@ class _EventOrganizerState extends State<EventOrganizer> {
                 )
               ],
             ):Row(
-
               children: [
                 Flexible(
                   child:Container(
@@ -122,7 +127,8 @@ class _EventOrganizerState extends State<EventOrganizer> {
                 ElevatedButton(
                   onPressed: (){
                     editTitle=!editTitle;
-                    setState(() {myControllerTitle=TextEditingController(text: titleEvent);
+                    setState(() {
+                      titleEvent=myControllerTitle.text;
                     });
                   },
                   child:Text("Save",style: TextStyle(
@@ -167,21 +173,145 @@ class _EventOrganizerState extends State<EventOrganizer> {
 
                       const Text('Información',
                           style: TextStyle(fontSize: 20, color: Colors.black)),
-                      GestureDetector(
-                          child: Icon(Icons.settings))
+                      editInfo==false?GestureDetector(
+                          onTap: (){
+                            editInfo=!editInfo;
+                            setState(() {
+
+                            });
+                          },
+                          child: Icon(Icons.settings)
+                      ):GestureDetector(
+                          onTap: (){
+                            editInfo=!editInfo;
+                            setState(() {
+                              myControllerInfo=TextEditingController(text: description);
+                            });
+                          },
+                          child: Icon(Icons.close,color: Colors.red,)
+                      )
                     ],
                   ),
                   const SizedBox(height: 20),
                   Center(
-                    child: Text(
+                    child:editInfo==false? Text(
                         description
-                    ),
+                    ):Column(
+                      children: [
+                        Container(
+                          alignment: Alignment.topLeft,
+                          decoration: BoxDecoration(
+                              color: Color(0xFFC6C6C6),
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 2,
+                                offset: Offset(0,2),
+                              )]
+                          ),
+                          height: 380,
+                          child: TextField(
+                            controller: myControllerInfo,
+                            expands: true,
+                            maxLines: null,
+                            enableSuggestions: false,
+                            autocorrect: false,
+                            cursorColor: Colors.purple,
+                            style: TextStyle(color: Colors.black),
+                            decoration:InputDecoration(
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.all(8),
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: (){
+                            editInfo=!editInfo;
+                            setState(() {
+                              description=myControllerInfo.text;
+                            });
+                          },
+                          child:Text("Save",style: TextStyle(
+                            fontSize:18,
+                            letterSpacing: 2,
+                            color: Colors.white,
+                          ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.purple,
+                              padding: EdgeInsets.symmetric(horizontal: 50),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+                          ),
+                        )
+                      ],
+                    )
                   ),
                   _promotionalImage(),
-                  const Text('Ubicación',
-                      style: TextStyle(fontSize: 20, color: Colors.black)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Ubicación',
+                          style: TextStyle(fontSize: 20, color: Colors.black)),
+                      editLocal==false?GestureDetector(
+                          onTap: (){editLocal=!editLocal;setState(() {});},
+                        child:Icon(Icons.settings)
+                      ):GestureDetector(
+                          onTap: (){editLocal=!editLocal;setState(() {
+                            myControllerLocal=TextEditingController(text: localAddress);
+                          });},
+                          child:Icon(Icons.close,color: Colors.red,)
+                      )
+                    ],
+                  ),
                   const SizedBox(height: 20),
-                  Text(localAddress),
+                  editLocal==false?Text(localAddress):Row(
+                    children: [
+                      Flexible(
+                        child:Container(
+                          alignment: Alignment.centerLeft,
+                          decoration: BoxDecoration(
+                              color: Color(0xFFC6C6C6),
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 2,
+                                offset: Offset(0,2),
+                              )]
+                          ),
+                          height: 35,
+                          child: TextField(
+                            keyboardType: TextInputType.name,
+                            cursorColor: Colors.purple,
+                            controller: myControllerLocal,
+                            style: TextStyle(color: Colors.black),
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.only(bottom: 10,left: 8)
+                            ),
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: (){
+                          editLocal=!editLocal;
+                          setState(() {
+                            localAddress=myControllerLocal.text;
+                          });
+                        },
+                        child:Text("Save",style: TextStyle(
+                          fontSize:14,
+                          letterSpacing: 1,
+                          color: Colors.white,
+                        ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.purple,
+                            padding: EdgeInsets.symmetric(horizontal:10),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

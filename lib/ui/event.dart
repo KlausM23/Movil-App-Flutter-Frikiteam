@@ -146,7 +146,7 @@ class _EventPageState extends State<EventPage> {
                   const SizedBox(height: 20),
                    Center(
                     child: Text(
-                      description
+                      description,style: TextStyle(letterSpacing: 1.1,height: 1.5),
                     ),
                   ),
                   _promotionalImage(),

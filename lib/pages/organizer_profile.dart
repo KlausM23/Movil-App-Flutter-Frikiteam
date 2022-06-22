@@ -48,10 +48,7 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
         );*/
                   child: GestureDetector(
                     onTap: (){
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context)=> const LoginPage())
-                      );
+                      Navigator.pushNamedAndRemoveUntil(context,'login', ((route) => false));
                     },
                     child: Icon(Icons.exit_to_app,color: Colors.red,size: 35,),
                   )

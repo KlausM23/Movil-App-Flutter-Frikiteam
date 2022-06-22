@@ -41,6 +41,7 @@ class _MyMainOrganizerState extends State<MyMainOrganizer> {
             FloatingActionButton(
              onPressed: (){
             //action code for button 2
+               Navigator.pushNamed(context, 'addEvent');
              },
              backgroundColor: Color(0xFF65295F),
              child: Icon(Icons.add),),

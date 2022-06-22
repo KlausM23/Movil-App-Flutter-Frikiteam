@@ -172,7 +172,7 @@ class _EventOrganizerState extends State<EventOrganizer> {
                     children: [
 
                       const Text('Información',
-                          style: TextStyle(fontSize: 20, color: Colors.black)),
+                          style: TextStyle(fontSize: 20, color: Colors.black, )),
                       editInfo==false?GestureDetector(
                           onTap: (){
                             editInfo=!editInfo;
@@ -195,7 +195,7 @@ class _EventOrganizerState extends State<EventOrganizer> {
                   const SizedBox(height: 20),
                   Center(
                     child:editInfo==false? Text(
-                        description
+                        description,style: TextStyle(letterSpacing: 1.1,height:1.5),
                     ):Column(
                       children: [
                         Container(
@@ -217,7 +217,7 @@ class _EventOrganizerState extends State<EventOrganizer> {
                             enableSuggestions: false,
                             autocorrect: false,
                             cursorColor: Colors.purple,
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(color: Colors.black,letterSpacing: 1.1,height: 1.5),
                             decoration:InputDecoration(
                                 border: InputBorder.none,
                                 contentPadding: EdgeInsets.all(8),

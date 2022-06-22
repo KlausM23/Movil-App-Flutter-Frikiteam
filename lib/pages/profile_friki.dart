@@ -56,10 +56,12 @@ class _ProfileFrikiState extends State<ProfileFriki> {
         );*/
               child: GestureDetector(
                 onTap: (){
-                  Navigator.push(
+                  /*Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context)=> const LoginPage())
-                  );
+                  );*/
+                  Navigator.pushNamedAndRemoveUntil(context,'login', ((route) => false));
+                 /* Navigator.pop(context);*/
                 },
                 child: Icon(Icons.exit_to_app,color: Colors.red,size: 35,),
               )

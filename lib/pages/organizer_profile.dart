@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:app_flutter_frikiteam/model/Organizer.dart';
 import 'package:app_flutter_frikiteam/ui/login_page.dart';
@@ -47,10 +48,7 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
         );*/
                   child: GestureDetector(
                     onTap: (){
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context)=> const LoginPage())
-                      );
+                      Navigator.pushNamedAndRemoveUntil(context,'login', ((route) => false));
                     },
                     child: Icon(Icons.exit_to_app,color: Colors.red,size: 35,),
                   )
@@ -124,185 +122,187 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
     );
   }
   Widget inputs(){
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Name:",style: TextStyle(color: Colors.black45,fontSize: 20,)),
-        SizedBox(
-          height: 8,
-        ),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: BoxDecoration(
-              color: Color(0xFFC6C6C6),
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [BoxShadow(
-                color: Colors.black26,
-                blurRadius: 2,
-                offset: Offset(0,2),
-              )]
+    return ElasticInLeft(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Name:",style: TextStyle(color: Colors.black45,fontSize: 20,)),
+          SizedBox(
+            height: 8,
           ),
-          height: 50,
-          child: TextField(
-            keyboardType: TextInputType.name,
-            controller: myControllerName,
-            cursorColor: Colors.purple,
-            style: TextStyle(color: Colors.black),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top:14),
-              prefixIcon: Icon(Icons.account_circle,color: Colors.purple),
+          Container(
+            alignment: Alignment.centerLeft,
+            decoration: BoxDecoration(
+                color: Color(0xFFC6C6C6),
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 2,
+                  offset: Offset(0,2),
+                )]
             ),
-          ),
-        ),
-        SizedBox(
-          height:8,
-        ),
-        Text("Last Name:",style: TextStyle(color: Colors.black45,fontSize: 20,)),
-        SizedBox(
-          height: 8,
-        ),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: BoxDecoration(
-              color: Color(0xFFC6C6C6),
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [BoxShadow(
-                color: Colors.black26,
-                blurRadius: 2,
-                offset: Offset(0,2),
-              )]
-          ),
-          height: 50,
-          child: TextField(
-            keyboardType: TextInputType.name,
-            controller: myControllerLastName,
-            cursorColor: Colors.purple,
-            style: TextStyle(color: Colors.black),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top:14),
-              prefixIcon: Icon(Icons.account_circle,color: Colors.purple),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        Text("Email:",style: TextStyle(color: Colors.black45,fontSize: 20,)),
-        SizedBox(
-          height:8,
-        ),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: BoxDecoration(
-              color: Color(0xFFC6C6C6),
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [BoxShadow(
-                color: Colors.black26,
-                blurRadius: 2,
-                offset: Offset(0,2),
-              )]
-          ),
-          height: 50,
-          child: TextField(
-            keyboardType: TextInputType.emailAddress,
-            controller: myControllerEmail,
-            cursorColor: Colors.purple,
-            style: TextStyle(color: Colors.black),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top:14),
-              prefixIcon: Icon(Icons.email,color: Colors.purple),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        Text("Contraseña:",style: TextStyle(color: Colors.black45,fontSize: 20,)),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: BoxDecoration(
-              color: Color(0xFFC6C6C6),
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [BoxShadow(
-                color: Colors.black26,
-                blurRadius: 2,
-                offset: Offset(0,2),
-              )]
-          ),
-          height: 50,
-          child: TextField(
-            obscureText: !showPassword,
-            keyboardType: TextInputType.visiblePassword,
-            enableSuggestions: false,
-            autocorrect: false,
-            controller: myControllerPassword,
-            cursorColor: Colors.purple,
-            style: TextStyle(color: Colors.black),
-            decoration:InputDecoration(
+            height: 50,
+            child: TextField(
+              keyboardType: TextInputType.name,
+              controller: myControllerName,
+              cursorColor: Colors.purple,
+              style: TextStyle(color: Colors.black),
+              decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.only(top:14),
-                prefixIcon: Icon(Icons.lock,color: Colors.purple),
-                suffixIcon: IconButton(
-                  icon: !showPassword?Icon(Icons.visibility_off):Icon(Icons.visibility),
-                  onPressed:setShowPassword,
-                )
+                prefixIcon: Icon(Icons.account_circle,color: Colors.purple),
+              ),
             ),
           ),
-        ),
-        SizedBox( height: 8,),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            OutlinedButton(
-              onPressed: (){
-                edit=!edit;
-                setState(() {
-                  myControllerEmail=TextEditingController(text: emailEdit);
-                  myControllerPassword=TextEditingController(text: passwordEdit);
-                  myControllerName=TextEditingController(text: nameEdit);
-                  myControllerLastName=TextEditingController(text: lastNameEdit);
-                  showPassword=false;
-                });
-              },
-              child: Text("Cancel",style: TextStyle(
-                fontSize:18,
-                letterSpacing: 2,
-                color: Colors.purple,
-              ),),
-              style: OutlinedButton.styleFrom(
-                  side: BorderSide(width: 2,color: Colors.purple),
-                  padding: EdgeInsets.symmetric(horizontal: 50),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+          SizedBox(
+            height:8,
+          ),
+          Text("Last Name:",style: TextStyle(color: Colors.black45,fontSize: 20,)),
+          SizedBox(
+            height: 8,
+          ),
+          Container(
+            alignment: Alignment.centerLeft,
+            decoration: BoxDecoration(
+                color: Color(0xFFC6C6C6),
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 2,
+                  offset: Offset(0,2),
+                )]
+            ),
+            height: 50,
+            child: TextField(
+              keyboardType: TextInputType.name,
+              controller: myControllerLastName,
+              cursorColor: Colors.purple,
+              style: TextStyle(color: Colors.black),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(top:14),
+                prefixIcon: Icon(Icons.account_circle,color: Colors.purple),
               ),
             ),
-            ElevatedButton(
-              onPressed: (){
-                edit=!edit;
-                setState(() {
-                  nameEdit=myControllerName.text;
-                  lastNameEdit=myControllerLastName.text;
-                  emailEdit=myControllerEmail.text;
-                  passwordEdit=myControllerPassword.text;
-                });
-              },
-              child:Text("Save",style: TextStyle(
-                fontSize:18,
-                letterSpacing: 2,
-                color: Colors.white,
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Text("Email:",style: TextStyle(color: Colors.black45,fontSize: 20,)),
+          SizedBox(
+            height:8,
+          ),
+          Container(
+            alignment: Alignment.centerLeft,
+            decoration: BoxDecoration(
+                color: Color(0xFFC6C6C6),
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 2,
+                  offset: Offset(0,2),
+                )]
+            ),
+            height: 50,
+            child: TextField(
+              keyboardType: TextInputType.emailAddress,
+              controller: myControllerEmail,
+              cursorColor: Colors.purple,
+              style: TextStyle(color: Colors.black),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(top:14),
+                prefixIcon: Icon(Icons.email,color: Colors.purple),
               ),
+            ),
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Text("Contraseña:",style: TextStyle(color: Colors.black45,fontSize: 20,)),
+          Container(
+            alignment: Alignment.centerLeft,
+            decoration: BoxDecoration(
+                color: Color(0xFFC6C6C6),
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 2,
+                  offset: Offset(0,2),
+                )]
+            ),
+            height: 50,
+            child: TextField(
+              obscureText: !showPassword,
+              keyboardType: TextInputType.visiblePassword,
+              enableSuggestions: false,
+              autocorrect: false,
+              controller: myControllerPassword,
+              cursorColor: Colors.purple,
+              style: TextStyle(color: Colors.black),
+              decoration:InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.only(top:14),
+                  prefixIcon: Icon(Icons.lock,color: Colors.purple),
+                  suffixIcon: IconButton(
+                    icon: !showPassword?Icon(Icons.visibility_off):Icon(Icons.visibility),
+                    onPressed:setShowPassword,
+                  )
               ),
-              style: ElevatedButton.styleFrom(
-                  primary: Colors.purple,
-                  padding: EdgeInsets.symmetric(horizontal: 50),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+            ),
+          ),
+          SizedBox( height: 8,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              OutlinedButton(
+                onPressed: (){
+                  edit=!edit;
+                  setState(() {
+                    myControllerEmail=TextEditingController(text: emailEdit);
+                    myControllerPassword=TextEditingController(text: passwordEdit);
+                    myControllerName=TextEditingController(text: nameEdit);
+                    myControllerLastName=TextEditingController(text: lastNameEdit);
+                    showPassword=false;
+                  });
+                },
+                child: Text("Cancel",style: TextStyle(
+                  fontSize:18,
+                  letterSpacing: 2,
+                  color: Colors.purple,
+                ),),
+                style: OutlinedButton.styleFrom(
+                    side: BorderSide(width: 2,color: Colors.purple),
+                    padding: EdgeInsets.symmetric(horizontal: 50),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+                ),
               ),
-            )
-          ],
-        )
-      ],
+              ElevatedButton(
+                onPressed: (){
+                  edit=!edit;
+                  setState(() {
+                    nameEdit=myControllerName.text;
+                    lastNameEdit=myControllerLastName.text;
+                    emailEdit=myControllerEmail.text;
+                    passwordEdit=myControllerPassword.text;
+                  });
+                },
+                child:Text("Save",style: TextStyle(
+                  fontSize:18,
+                  letterSpacing: 2,
+                  color: Colors.white,
+                ),
+                ),
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.purple,
+                    padding: EdgeInsets.symmetric(horizontal: 50),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+                ),
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 

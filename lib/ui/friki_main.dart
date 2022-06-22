@@ -16,15 +16,8 @@ class _MainFrikiState extends State<MainFriki> {
   final PageController pageController=PageController(initialPage: 1);
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'FindEvents',
-      /*theme: ThemeData(
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Color(0xFF5414B0),
-          ),
-      ),*/
-      home: Scaffold(
+    return Scaffold(
+
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           toolbarHeight: 70,
@@ -91,7 +84,7 @@ class _MainFrikiState extends State<MainFriki> {
         ),
         ),
 
-      ),
+
     );
   }
 }

@@ -18,11 +18,7 @@ class _MainOrganizerState extends State<MainOrganizer> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'FindEvents',
-
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           toolbarHeight: 70,
@@ -66,7 +62,6 @@ class _MainOrganizerState extends State<MainOrganizer> {
 
         ),
         ),
-      )
     );
   }
 }

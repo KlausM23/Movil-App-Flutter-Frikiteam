@@ -166,12 +166,14 @@ class _LoginPageState extends State<LoginPage> {
                               print("User type: " + _userType);
 
                               if(_userType == "Usuario Friki"){
-                                Navigator.of(context).pushNamed('/friki');
+                                /*Navigator.of(context).pushNamed('/friki');*/
+                                Navigator.pushNamedAndRemoveUntil(context,'friki', ((route) => false));
                                 print("Vista usuario friki");
                               }else if (_userType == "Organizador"){
-                                Navigator.push(
+                                /*Navigator.push(
                                     context, 
-                                    MaterialPageRoute(builder: (context) => const MainOrganizer()));
+                                    MaterialPageRoute(builder: (context) => const MainOrganizer()));*/
+                                Navigator.pushNamedAndRemoveUntil(context,'organizer', ((route) => false));
                                 print("Vista organizador");
                               }else{
                                 print("Escoga un tipo de usuario");

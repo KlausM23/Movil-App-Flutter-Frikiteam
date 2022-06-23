@@ -69,6 +69,7 @@ class _EventPageState extends State<EventPage> {
     super.initState();
     //_getEventa();
     this.getData();
+    assist=widget.seguido;
   }
 
   @override
@@ -115,11 +116,10 @@ class _EventPageState extends State<EventPage> {
                       Positioned(
                         top: 3,
                         left: -18,
-                        child: widget.seguido
+                        child: assist
                             ? OutlinedButton(
                                 onPressed: () {
-                                  widget.seguido = !widget.seguido;
-                                  setState(() {});
+                                  setState(() { assist = !assist;});
                                 },
                                 child: Text(
                                   "UnFollow",
@@ -140,9 +140,8 @@ class _EventPageState extends State<EventPage> {
                               )
                             : ElevatedButton(
                                 onPressed: () {
-                                  widget.seguido = !widget.seguido;
                                   //TODO: hacer request de cambio
-                                  setState(() {});
+                                  setState(() {assist = !assist;});
                                 },
                                 child: Text(
                                   "Follow",
@@ -310,7 +309,7 @@ class _EventPageState extends State<EventPage> {
           Column(
             children: [
               Text(
-                priceEvent.toString(),
+                widget.eventoCorrespondiente.price.toString(),
                 style:
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),

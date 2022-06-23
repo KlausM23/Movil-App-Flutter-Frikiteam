@@ -1,4 +1,5 @@
 import 'package:app_flutter_frikiteam/services/event_service.dart';
+import 'package:app_flutter_frikiteam/services/friki_service.dart';
 import 'package:app_flutter_frikiteam/ui/event.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -23,8 +24,9 @@ class _MyMainFrikiState extends State<MyMainFriki> {
     Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",10),
     Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",20),*/
   ];
-
+  List<Event> eventsFollow = [];
   final _eventService = EventService();
+  final _frikiService = FrikiService();
 
   void _getEvents() async {
     final events = await _eventService.getAllEvents();
@@ -33,10 +35,18 @@ class _MyMainFrikiState extends State<MyMainFriki> {
         this.events = events;
       });
   }
+  void _getEventsFollow() async {
+    final events = await _frikiService.getFollowEvents();
+    if (mounted)
+      setState(() {
+        eventsFollow = events;
+      });
+  }
 
   @override
   void initState() {
     _getEvents();
+    _getEventsFollow();
     super.initState();
   }
 
@@ -88,7 +98,7 @@ class _MyMainFrikiState extends State<MyMainFriki> {
               /*height:  MediaQuery.of(context).size.height*0.36,*/
               child: GridView(
                 padding: const EdgeInsets.all(8),
-                children: events.map((e) => EventItem(e)).toList(),
+                children: events.map((e) => EventItem(this.eventsFollow,e)).toList(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     childAspectRatio: 1.1,
@@ -111,20 +121,46 @@ class _MyMainFrikiState extends State<MyMainFriki> {
 
 class EventItem extends StatelessWidget {
   final Event event;
-  const EventItem(this.event, {Key? key}) : super(key: key);
+  List<Event> eventsFollow;
+  EventItem(this.eventsFollow,this.event, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        bool contains = false;
+        for (var i = 0; i < eventsFollow.length; i++) {
+          if (event.id == eventsFollow[i].id) contains = true;
+        }
+        if (contains) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EventPage(
+                eventoCorrespondiente: event,
+                seguido: true,
+              ),
+            ),
+          );
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EventPage(
+                eventoCorrespondiente: event,
+                seguido: false,
+              ),
+            ),
+          );
+        }
         /*Navigator.of(context).pushNamed('/event');*/
-        Navigator.push(
+        /*Navigator.push(
             context,
             MaterialPageRoute(
                 //TODO: aqui validar denuevo el seguido
                 builder: (context) => EventPage(
                       eventoCorrespondiente: event,
                       seguido: false,
-                    )));
+                    )));*/
         //Navigator.pushNamed(context, 'event');
       },
       child: AspectRatio(

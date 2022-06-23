@@ -1,5 +1,6 @@
 import 'package:app_flutter_frikiteam/pages/search_friki.dart';
 import 'package:app_flutter_frikiteam/services/friki_service.dart';
+import 'package:app_flutter_frikiteam/ui/event.dart';
 import 'package:app_flutter_frikiteam/ui/login_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -232,7 +233,8 @@ class _ProfileFrikiState extends State<ProfileFriki> {
                   child: ListView.builder(
                       itemBuilder: (context, index) {
                         final event = eventsFollow[index];
-                        return EventListItem([], event);
+                        /*return EventListItem(eventsFollow, event);*/
+                        return EventFollowItem(event);
                       },
                       itemCount: eventsFollow.length)),
             ],
@@ -453,6 +455,57 @@ class _ProfileFrikiState extends State<ProfileFriki> {
     );
   }
 }
+
+class EventFollowItem extends StatelessWidget {
+  final Event event;
+  EventFollowItem(this.event, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EventPage(
+                eventoCorrespondiente: event,
+                seguido: true,
+              ),
+            ),
+          );
+
+      },
+      child: Container(
+        height: 150,
+        margin: EdgeInsets.only(bottom: 15),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          image: DecorationImage(
+              image: NetworkImage(event.logo!), fit: BoxFit.fill),
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [Colors.black.withOpacity(0.7), Colors.transparent])),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Text(event.name!,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    letterSpacing: 10,
+                    fontWeight: FontWeight.w700)),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 
 class imageOrganizer extends StatelessWidget {
   final String img;

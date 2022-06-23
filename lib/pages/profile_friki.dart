@@ -1,5 +1,6 @@
 import 'package:app_flutter_frikiteam/pages/search_friki.dart';
 import 'package:app_flutter_frikiteam/services/friki_service.dart';
+import 'package:app_flutter_frikiteam/services/organized_service.dart';
 import 'package:app_flutter_frikiteam/ui/event.dart';
 import 'package:app_flutter_frikiteam/ui/login_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,7 +34,7 @@ class _ProfileFrikiState extends State<ProfileFriki> {
   @override
   void initState() {
     _getEvents();
-    print('event generate');
+    _getOrganizesFollowed();
     super.initState();
   }
 
@@ -49,32 +50,16 @@ class _ProfileFrikiState extends State<ProfileFriki> {
   static String passwordEdit = friki.password;
   static String nameEdit = friki.name;
   static String lastNameEdit = friki.lastName;
-  static List<Organizer> organizers = [
-    Organizer(
-        "Luis",
-        "García",
-        "https://lamenteesmaravillosa.com/wp-content/uploads/2018/09/hombre-creido-pensando-que-sabe.jpg",
-        "luis@gmail.com",
-        "luisito"),
-    Organizer(
-        "Maria",
-        "Lara",
-        "https://img.freepik.com/foto-gratis/retrato-hermoso-mujer-joven-posicion-pared-gris_231208-10760.jpg?w=2000",
-        "maria@gmail.com",
-        "maria123"),
-    Organizer(
-        "Luciana",
-        "Herrera",
-        "https://portal.andina.pe/EDPfotografia3/Thumbnail/2022/03/08/000851626W.jpg",
-        "lucia@gmail.com",
-        "lucia789"),
-    Organizer(
-        "Diego",
-        "Rogriguez",
-        "https://st2.depositphotos.com/2931363/6511/i/600/depositphotos_65116237-stock-photo-happy-young-man-in-shirt.jpg",
-        "diego@gmail.com",
-        "diego789"),
-  ];
+  static List<Organizer> organizers = [];
+
+  Future<void> _getOrganizesFollowed() async {
+    final OrganizerService service = OrganizerService();
+    final response = await service.getOrganizesFollowed(25);
+    setState(() {
+      organizers = response;
+    });
+  }
+
   void setShowPassword() {
     showPassword = !showPassword;
     setState(() {});
@@ -211,7 +196,7 @@ class _ProfileFrikiState extends State<ProfileFriki> {
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
                     final _organizer = organizers[index];
-                    return imageOrganizer(_organizer.img);
+                    return imageOrganizer(organizers[index].logo!);
                   },
                   itemCount: organizers.length,
                 ),
@@ -464,16 +449,15 @@ class EventFollowItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => EventPage(
-                eventoCorrespondiente: event,
-                seguido: true,
-              ),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EventPage(
+              eventoCorrespondiente: event,
+              seguido: true,
             ),
-          );
-
+          ),
+        );
       },
       child: Container(
         height: 150,
@@ -505,7 +489,6 @@ class EventFollowItem extends StatelessWidget {
     );
   }
 }
-
 
 class imageOrganizer extends StatelessWidget {
   final String img;

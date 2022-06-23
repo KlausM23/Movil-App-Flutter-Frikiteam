@@ -42,15 +42,9 @@ class _EventOrganizerState extends State<EventOrganizer> {
     Local local = new Local("Plaza Mole del sur 760");
     localAddress = local.address;
 
-    Organizer organizer = new Organizer(
-        "Luciana",
-        "Herrera",
-        "https://portal.andina.pe/EDPfotografia3/Thumbnail/2022/03/08/000851626W.jpg",
-        "lucia@gmail.com",
-        "lucia789");
-    imgOrganizer = organizer.img;
-    nameOrganizer = organizer.name;
-    lastNameOrganizer = organizer.lastName;
+    imgOrganizer = 'organizer.img';
+    nameOrganizer = 'organizer.name';
+    lastNameOrganizer = 'organizer.lastName';
   }
 
   @override

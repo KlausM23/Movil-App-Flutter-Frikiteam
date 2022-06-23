@@ -2,6 +2,7 @@ import 'package:app_flutter_frikiteam/model/DescriptionEvent.dart';
 import 'package:app_flutter_frikiteam/model/Local.dart';
 import 'package:app_flutter_frikiteam/model/Organizer.dart';
 import 'package:app_flutter_frikiteam/services/event_information_service.dart';
+import 'package:app_flutter_frikiteam/services/organized_service.dart';
 import 'package:flutter/material.dart';
 import 'package:app_flutter_frikiteam/model/Event.dart';
 
@@ -26,7 +27,8 @@ class _EventPageState extends State<EventPage> {
   String imgDescription =
       "https://portal.andina.pe/EDPfotografia3/Thumbnail/2022/03/08/000851626W.jpg";
   String localAddress = "local.address";
-  String imgOrganizer = "a";
+  String imgOrganizer =
+      "https://steamuserimages-a.akamaihd.net/ugc/915797707427426369/E3349D95D23CAFA4CCC53DC56D4381BE6534FC42/";
   String nameOrganizer = "a";
   String lastNameOrganizer = "a";
   void getData() async {
@@ -44,16 +46,6 @@ class _EventPageState extends State<EventPage> {
 
     Local local = new Local("Plaza Mole del sur 760");
     localAddress = local.address;
-
-    Organizer organizer = new Organizer(
-        "Luciana",
-        "Herrera",
-        "https://portal.andina.pe/EDPfotografia3/Thumbnail/2022/03/08/000851626W.jpg",
-        "lucia@gmail.com",
-        "lucia789");
-    imgOrganizer = organizer.img;
-    nameOrganizer = organizer.name;
-    lastNameOrganizer = organizer.lastName;
   }
 
   Future<DescriptionEvent> _getEvento() async {
@@ -64,160 +56,193 @@ class _EventPageState extends State<EventPage> {
     return evento;
   }
 
+  Future<Organizer> _getOrganizer() async {
+    final service = OrganizerService();
+    final Organizer organizer = await service
+        .getSomeOrganized(widget.eventoCorrespondiente.organizerId!);
+    return organizer;
+  }
+
+  late Future<DescriptionEvent> dataFutureDescription;
+  late Future<Organizer> dataFutureOrganizer;
+
   @override
   void initState() {
     super.initState();
-    //_getEventa();
-    this.getData();
-    assist=widget.seguido;
+    dataFutureOrganizer = _getOrganizer();
+    dataFutureDescription = _getEvento();
+    getData();
+    assist = widget.seguido;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        toolbarHeight: 70,
-        title: const Text('FindEvents'),
-        elevation: 0.0,
-        centerTitle: true,
-        titleTextStyle: const TextStyle(fontSize: 25),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(40),
-                bottomRight: Radius.circular(40)),
-            color: Color(0XFF65295F),
+        extendBody: true,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          toolbarHeight: 70,
+          title: const Text('FindEvents'),
+          elevation: 0.0,
+          centerTitle: true,
+          titleTextStyle: const TextStyle(fontSize: 25),
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(40),
+                  bottomRight: Radius.circular(40)),
+              color: Color(0XFF65295F),
+            ),
           ),
         ),
-      ),
-      body: FutureBuilder<DescriptionEvent>(
-        future: _getEvento(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return ListView(
-              children: [
-                _heroImage(),
-                Container(
-                  margin: EdgeInsets.only(top: 20),
-                  height: 60,
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: Stack(
-                    children: [
-                      Center(
-                          child: Text(
-                        widget.eventoCorrespondiente.name!,
-                        style: TextStyle(
-                            fontSize: 19, fontWeight: FontWeight.bold),
-                      )),
-                      Positioned(
-                        top: 3,
-                        left: -18,
-                        child: assist
-                            ? OutlinedButton(
-                                onPressed: () {
-                                  setState(() { assist = !assist;});
-                                },
-                                child: Text(
-                                  "UnFollow",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    letterSpacing: 1,
-                                    color: Color.fromARGB(255, 209, 108, 14),
-                                  ),
-                                ),
-                                style: OutlinedButton.styleFrom(
-                                    side: BorderSide(
-                                        width: 2, color: Colors.purple),
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 6),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(50))),
-                              )
-                            : ElevatedButton(
-                                onPressed: () {
-                                  //TODO: hacer request de cambio
-                                  setState(() {assist = !assist;});
-                                },
-                                child: Text(
-                                  "Follow",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    letterSpacing: 2,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                    primary: Color.fromARGB(255, 209, 108, 14),
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 8),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(50))),
+        body: ListView(
+          children: [
+            _heroImage(),
+            Container(
+              margin: EdgeInsets.only(top: 20),
+              height: 60,
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Stack(
+                children: [
+                  Center(
+                      child: Text(
+                    widget.eventoCorrespondiente.name!,
+                    style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                  )),
+                  Positioned(
+                    top: 3,
+                    left: -18,
+                    child: assist
+                        ? OutlinedButton(
+                            onPressed: () {
+                              setState(() {
+                                assist = !assist;
+                              });
+                            },
+                            child: Text(
+                              "UnFollow",
+                              style: TextStyle(
+                                fontSize: 16,
+                                letterSpacing: 1,
+                                color: Color.fromARGB(255, 209, 108, 14),
                               ),
-                      ),
-                    ],
-                    clipBehavior: Clip.none,
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  color: const Color(0xFF65295F),
-                  child: const Center(
-                      child: Text('Itinerario',
-                          style: TextStyle(fontSize: 20, color: Colors.white))),
-                ),
-                _itinerario(),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                  child: Center(
-                    child: Column(
-                      children: [
-                        const Text('Información',
-                            style:
-                                TextStyle(fontSize: 20, color: Colors.black)),
-                        const SizedBox(height: 20),
-                        Center(
-                          child: Text(
-                            snapshot.data!.description!,
-                            style: TextStyle(letterSpacing: 1.1, height: 1.5),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                                side:
+                                    BorderSide(width: 2, color: Colors.purple),
+                                padding: EdgeInsets.symmetric(horizontal: 6),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50))),
+                          )
+                        : ElevatedButton(
+                            onPressed: () {
+                              //TODO: hacer request de cambio
+                              setState(() {
+                                assist = !assist;
+                              });
+                            },
+                            child: Text(
+                              "Follow",
+                              style: TextStyle(
+                                fontSize: 16,
+                                letterSpacing: 2,
+                                color: Colors.white,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                                primary: Color.fromARGB(255, 209, 108, 14),
+                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50))),
                           ),
-                        ),
-                        _promotionalImage(snapshot.data!.image!.toString()),
-                        const Text('Ubicación',
-                            style:
-                                TextStyle(fontSize: 20, color: Colors.black)),
-                        const SizedBox(height: 20),
-                        Text(localAddress),
-                        const SizedBox(height: 20),
-                        const Text('Organizador',
-                            style:
-                                TextStyle(fontSize: 20, color: Colors.black)),
-                        const SizedBox(height: 20),
-                        _organizador(),
-                        Text(nameOrganizer + " " + lastNameOrganizer,
-                            style:
-                                TextStyle(fontSize: 20, color: Colors.black)),
-                        const SizedBox(height: 30),
-                        _asistirButton(),
-                        const SizedBox(height: 10),
-                      ],
-                    ),
                   ),
-                )
-              ],
-            );
-          } else {
-            return CircularProgressIndicator();
-          }
-        },
-      ),
-    );
+                ],
+                clipBehavior: Clip.none,
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              color: const Color(0xFF65295F),
+              child: const Center(
+                  child: Text('Itinerario',
+                      style: TextStyle(fontSize: 20, color: Colors.white))),
+            ),
+            _itinerario(),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: Center(
+                child: Column(
+                  children: [
+                    const Text('Información',
+                        style: TextStyle(fontSize: 20, color: Colors.black)),
+                    const SizedBox(height: 20),
+                    //TODO: aqui empieza el futurebuilder
+
+                    FutureBuilder<DescriptionEvent?>(
+                      future: dataFutureDescription,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return Column(
+                            children: [
+                              Center(
+                                child: Text(
+                                  snapshot.data!.description!,
+                                  style: TextStyle(
+                                      letterSpacing: 1.1, height: 1.5),
+                                ),
+                              ),
+                              _promotionalImage(
+                                  snapshot.data!.image!.toString()),
+                            ],
+                          );
+                        } else {
+                          return const CircularProgressIndicator();
+                        }
+                      },
+                    ),
+
+                    //TODO: AQUI TERMINA EL FUTUREBUILDER
+                    const Text('Ubicación',
+                        style: TextStyle(fontSize: 20, color: Colors.black)),
+                    const SizedBox(height: 20),
+                    Text(localAddress),
+                    const SizedBox(height: 20),
+                    const Text('Organizador',
+                        style: TextStyle(fontSize: 20, color: Colors.black)),
+                    const SizedBox(height: 20),
+                    FutureBuilder<Organizer?>(
+                      future: dataFutureOrganizer,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return Column(
+                            children: [
+                              _organizador(imageLogo: snapshot.data!.logo!),
+                              Text(
+                                  snapshot.data!.firstName! +
+                                      " " +
+                                      snapshot.data!.lastName!,
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black)),
+                            ],
+                          );
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      },
+                    ),
+
+                    const SizedBox(height: 30),
+                    _asistirButton(),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ));
   }
 
   Container _heroImage() {
@@ -261,10 +286,10 @@ class _EventPageState extends State<EventPage> {
     );
   }
 
-  Widget _organizador() {
+  Widget _organizador({required String imageLogo}) {
     return CircleAvatar(
       radius: 50,
-      backgroundImage: NetworkImage(imgOrganizer),
+      backgroundImage: NetworkImage(imageLogo),
     );
   }
 

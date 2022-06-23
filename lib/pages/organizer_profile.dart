@@ -11,22 +11,25 @@ class OrganizerProfile extends StatefulWidget {
 }
 
 class _OrganizerProfileState extends State<OrganizerProfile> {
+  //static Organizer organizer = new Organizer("Abel", "Gutierrez", "https://cdn2.rsvponline.mx/files/rsvp/styles/wide/public/images/main/2016/horentrepre.jpg","abelGuti@gmail.com","abcde");
+  bool edit = false;
+  bool showPassword = false;
+  static String emailEdit = 'organizer.email';
+  static String passwordEdit = 'organizer.password';
+  static String nameEdit = 'organizer.name';
+  static String lastNameEdit = 'organizer.lastName';
 
-  static Organizer organizer = new Organizer("Abel", "Gutierrez", "https://cdn2.rsvponline.mx/files/rsvp/styles/wide/public/images/main/2016/horentrepre.jpg","abelGuti@gmail.com","abcde");
-  bool edit=false;
-  bool showPassword=false;
-  static String emailEdit = organizer.email;
-  static String passwordEdit = organizer.password;
-  static String nameEdit = organizer.name;
-  static String lastNameEdit = organizer.lastName;
+  TextEditingController myControllerEmail =
+      TextEditingController(text: emailEdit);
+  TextEditingController myControllerPassword =
+      TextEditingController(text: passwordEdit);
+  TextEditingController myControllerName =
+      TextEditingController(text: nameEdit);
+  TextEditingController myControllerLastName =
+      TextEditingController(text: lastNameEdit);
 
-  TextEditingController myControllerEmail = TextEditingController(text: emailEdit);
-  TextEditingController myControllerPassword = TextEditingController(text: passwordEdit);
-  TextEditingController myControllerName = TextEditingController(text: nameEdit);
-  TextEditingController myControllerLastName = TextEditingController(text: lastNameEdit);
-
-  void setShowPassword(){
-    showPassword=!showPassword;
+  void setShowPassword() {
+    showPassword = !showPassword;
     setState(() {});
   }
 
@@ -34,7 +37,7 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-          padding: EdgeInsets.only(top: 5,bottom: 12,left: 10,right: 10),
+          padding: EdgeInsets.only(top: 5, bottom: 12, left: 10, right: 10),
           width: MediaQuery.of(context).size.width,
           color: Colors.white,
           child: ListView(
@@ -47,23 +50,27 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
             MaterialPageRoute(builder: (context)=> const MainFriki())
         );*/
                   child: GestureDetector(
-                    onTap: (){
-                      Navigator.pushNamedAndRemoveUntil(context,'login', ((route) => false));
+                    onTap: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, 'login', ((route) => false));
                     },
-                    child: Icon(Icons.exit_to_app,color: Colors.red,size: 35,),
-                  )
-              ),
+                    child: Icon(
+                      Icons.exit_to_app,
+                      color: Colors.red,
+                      size: 35,
+                    ),
+                  )),
               Container(
-                padding: EdgeInsets.only(top: 5,bottom: 2),
+                padding: EdgeInsets.only(top: 5, bottom: 2),
                 width: MediaQuery.of(context).size.width,
                 alignment: Alignment.center,
                 child: Stack(
                   children: [
                     Container(
-                      width: MediaQuery.of(context).size.width*0.3,
-                      height: MediaQuery.of(context).size.width*0.3,
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      height: MediaQuery.of(context).size.width * 0.3,
                       decoration: BoxDecoration(
-                          border: Border.all(width: 4,color: Colors.white),
+                          border: Border.all(width: 4, color: Colors.white),
                           boxShadow: [
                             BoxShadow(
                               spreadRadius: 2.0,
@@ -74,59 +81,73 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
                           shape: BoxShape.circle,
                           image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: NetworkImage(organizer.img)
-                          )
-                      ),
+                              image: NetworkImage(
+                                  'https://steamuserimages-a.akamaihd.net/ugc/915797707427426369/E3349D95D23CAFA4CCC53DC56D4381BE6534FC42'))),
                       alignment: Alignment.center,
                     ),
-                    Positioned(bottom: 0,right: 0,child: Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                              width: 4,
-                              color: Colors.white
-                          ),
-                          color: Colors.blue,
-                        ),
-                        child: GestureDetector(
-                          child:Icon(Icons.edit,color: Colors.white,),
-                          onTap: (){
-                            edit=!edit;
-                            setState(() {
-                              myControllerEmail=TextEditingController(text: emailEdit);
-                              myControllerPassword=TextEditingController(text: passwordEdit);
-                              myControllerName=TextEditingController(text: nameEdit);
-                              myControllerLastName=TextEditingController(text: lastNameEdit);
-                              showPassword=false;
-                            });
-                          },
-                        )
-                    )),
+                    Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(width: 4, color: Colors.white),
+                              color: Colors.blue,
+                            ),
+                            child: GestureDetector(
+                              child: Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                              ),
+                              onTap: () {
+                                edit = !edit;
+                                setState(() {
+                                  myControllerEmail =
+                                      TextEditingController(text: emailEdit);
+                                  myControllerPassword =
+                                      TextEditingController(text: passwordEdit);
+                                  myControllerName =
+                                      TextEditingController(text: nameEdit);
+                                  myControllerLastName =
+                                      TextEditingController(text: lastNameEdit);
+                                  showPassword = false;
+                                });
+                              },
+                            ))),
                   ],
                 ),
-              ),
-              SizedBox(height: 8,),
-              Container(
-                  child: edit == true ? inputs():
-                  Text(nameEdit+" "+lastNameEdit,textAlign: TextAlign.center,style: TextStyle(fontSize: 18),)
               ),
               SizedBox(
                 height: 8,
               ),
-
+              Container(
+                  child: edit == true
+                      ? inputs()
+                      : Text(
+                          nameEdit + " " + lastNameEdit,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 18),
+                        )),
+              SizedBox(
+                height: 8,
+              ),
             ],
-          )
-      ),
+          )),
     );
   }
-  Widget inputs(){
+
+  Widget inputs() {
     return ElasticInLeft(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Name:",style: TextStyle(color: Colors.black45,fontSize: 20,)),
+          Text("Name:",
+              style: TextStyle(
+                color: Colors.black45,
+                fontSize: 20,
+              )),
           SizedBox(
             height: 8,
           ),
@@ -135,12 +156,13 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
             decoration: BoxDecoration(
                 color: Color(0xFFC6C6C6),
                 borderRadius: BorderRadius.circular(15),
-                boxShadow: [BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 2,
-                  offset: Offset(0,2),
-                )]
-            ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 2,
+                    offset: Offset(0, 2),
+                  )
+                ]),
             height: 50,
             child: TextField(
               keyboardType: TextInputType.name,
@@ -149,15 +171,19 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
               style: TextStyle(color: Colors.black),
               decoration: InputDecoration(
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.only(top:14),
-                prefixIcon: Icon(Icons.account_circle,color: Colors.purple),
+                contentPadding: EdgeInsets.only(top: 14),
+                prefixIcon: Icon(Icons.account_circle, color: Colors.purple),
               ),
             ),
           ),
           SizedBox(
-            height:8,
+            height: 8,
           ),
-          Text("Last Name:",style: TextStyle(color: Colors.black45,fontSize: 20,)),
+          Text("Last Name:",
+              style: TextStyle(
+                color: Colors.black45,
+                fontSize: 20,
+              )),
           SizedBox(
             height: 8,
           ),
@@ -166,12 +192,13 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
             decoration: BoxDecoration(
                 color: Color(0xFFC6C6C6),
                 borderRadius: BorderRadius.circular(15),
-                boxShadow: [BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 2,
-                  offset: Offset(0,2),
-                )]
-            ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 2,
+                    offset: Offset(0, 2),
+                  )
+                ]),
             height: 50,
             child: TextField(
               keyboardType: TextInputType.name,
@@ -180,29 +207,34 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
               style: TextStyle(color: Colors.black),
               decoration: InputDecoration(
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.only(top:14),
-                prefixIcon: Icon(Icons.account_circle,color: Colors.purple),
+                contentPadding: EdgeInsets.only(top: 14),
+                prefixIcon: Icon(Icons.account_circle, color: Colors.purple),
               ),
             ),
           ),
           SizedBox(
             height: 8,
           ),
-          Text("Email:",style: TextStyle(color: Colors.black45,fontSize: 20,)),
+          Text("Email:",
+              style: TextStyle(
+                color: Colors.black45,
+                fontSize: 20,
+              )),
           SizedBox(
-            height:8,
+            height: 8,
           ),
           Container(
             alignment: Alignment.centerLeft,
             decoration: BoxDecoration(
                 color: Color(0xFFC6C6C6),
                 borderRadius: BorderRadius.circular(15),
-                boxShadow: [BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 2,
-                  offset: Offset(0,2),
-                )]
-            ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 2,
+                    offset: Offset(0, 2),
+                  )
+                ]),
             height: 50,
             child: TextField(
               keyboardType: TextInputType.emailAddress,
@@ -211,26 +243,31 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
               style: TextStyle(color: Colors.black),
               decoration: InputDecoration(
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.only(top:14),
-                prefixIcon: Icon(Icons.email,color: Colors.purple),
+                contentPadding: EdgeInsets.only(top: 14),
+                prefixIcon: Icon(Icons.email, color: Colors.purple),
               ),
             ),
           ),
           SizedBox(
             height: 8,
           ),
-          Text("Contraseña:",style: TextStyle(color: Colors.black45,fontSize: 20,)),
+          Text("Contraseña:",
+              style: TextStyle(
+                color: Colors.black45,
+                fontSize: 20,
+              )),
           Container(
             alignment: Alignment.centerLeft,
             decoration: BoxDecoration(
                 color: Color(0xFFC6C6C6),
                 borderRadius: BorderRadius.circular(15),
-                boxShadow: [BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 2,
-                  offset: Offset(0,2),
-                )]
-            ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 2,
+                    offset: Offset(0, 2),
+                  )
+                ]),
             height: 50,
             child: TextField(
               obscureText: !showPassword,
@@ -240,64 +277,74 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
               controller: myControllerPassword,
               cursorColor: Colors.purple,
               style: TextStyle(color: Colors.black),
-              decoration:InputDecoration(
+              decoration: InputDecoration(
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top:14),
-                  prefixIcon: Icon(Icons.lock,color: Colors.purple),
+                  contentPadding: EdgeInsets.only(top: 14),
+                  prefixIcon: Icon(Icons.lock, color: Colors.purple),
                   suffixIcon: IconButton(
-                    icon: !showPassword?Icon(Icons.visibility_off):Icon(Icons.visibility),
-                    onPressed:setShowPassword,
-                  )
-              ),
+                    icon: !showPassword
+                        ? Icon(Icons.visibility_off)
+                        : Icon(Icons.visibility),
+                    onPressed: setShowPassword,
+                  )),
             ),
           ),
-          SizedBox( height: 8,),
+          SizedBox(
+            height: 8,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               OutlinedButton(
-                onPressed: (){
-                  edit=!edit;
+                onPressed: () {
+                  edit = !edit;
                   setState(() {
-                    myControllerEmail=TextEditingController(text: emailEdit);
-                    myControllerPassword=TextEditingController(text: passwordEdit);
-                    myControllerName=TextEditingController(text: nameEdit);
-                    myControllerLastName=TextEditingController(text: lastNameEdit);
-                    showPassword=false;
+                    myControllerEmail = TextEditingController(text: emailEdit);
+                    myControllerPassword =
+                        TextEditingController(text: passwordEdit);
+                    myControllerName = TextEditingController(text: nameEdit);
+                    myControllerLastName =
+                        TextEditingController(text: lastNameEdit);
+                    showPassword = false;
                   });
                 },
-                child: Text("Cancel",style: TextStyle(
-                  fontSize:18,
-                  letterSpacing: 2,
-                  color: Colors.purple,
-                ),),
-                style: OutlinedButton.styleFrom(
-                    side: BorderSide(width: 2,color: Colors.purple),
-                    padding: EdgeInsets.symmetric(horizontal: 50),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+                child: Text(
+                  "Cancel",
+                  style: TextStyle(
+                    fontSize: 18,
+                    letterSpacing: 2,
+                    color: Colors.purple,
+                  ),
                 ),
+                style: OutlinedButton.styleFrom(
+                    side: BorderSide(width: 2, color: Colors.purple),
+                    padding: EdgeInsets.symmetric(horizontal: 50),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50))),
               ),
               ElevatedButton(
-                onPressed: (){
-                  edit=!edit;
+                onPressed: () {
+                  edit = !edit;
                   setState(() {
-                    nameEdit=myControllerName.text;
-                    lastNameEdit=myControllerLastName.text;
-                    emailEdit=myControllerEmail.text;
-                    passwordEdit=myControllerPassword.text;
+                    nameEdit = myControllerName.text;
+                    lastNameEdit = myControllerLastName.text;
+                    emailEdit = myControllerEmail.text;
+                    passwordEdit = myControllerPassword.text;
                   });
                 },
-                child:Text("Save",style: TextStyle(
-                  fontSize:18,
-                  letterSpacing: 2,
-                  color: Colors.white,
-                ),
+                child: Text(
+                  "Save",
+                  style: TextStyle(
+                    fontSize: 18,
+                    letterSpacing: 2,
+                    color: Colors.white,
+                  ),
                 ),
                 style: ElevatedButton.styleFrom(
                     primary: Colors.purple,
                     padding: EdgeInsets.symmetric(horizontal: 50),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
-                ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50))),
               )
             ],
           )
@@ -305,5 +352,4 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
       ),
     );
   }
-
 }

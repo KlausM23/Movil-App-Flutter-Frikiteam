@@ -8,18 +8,16 @@ import 'package:app_flutter_frikiteam/ui/register_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-
 class AppRoutes {
   static const initialRouter = 'login';
   static Map<String, Widget Function(BuildContext)> routes = {
     'login': (BuildContext context) => const LoginPage(),
-    'register': (BuildContext context) =>
-    const RegisterPage(),
-    'event': (BuildContext context) => const EventPage(),
+    'register': (BuildContext context) => const RegisterPage(),
+    //'event': (BuildContext context) => const EventPage(),
     'eventOrganizer': (BuildContext context) => const EventOrganizer(),
     'friki': (BuildContext context) => const MainFriki(),
     'organizer': (BuildContext context) => const MainOrganizer(),
-    'addEvent':(BuildContext context)=>const AddEvent()
+    'addEvent': (BuildContext context) => const AddEvent()
   };
   static onGeneratedRoute(RouteSettings settings) {
     return MaterialPageRoute(builder: (context) => const LoginPage());

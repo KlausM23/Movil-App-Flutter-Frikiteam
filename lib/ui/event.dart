@@ -1,55 +1,75 @@
-
 import 'package:app_flutter_frikiteam/model/DescriptionEvent.dart';
 import 'package:app_flutter_frikiteam/model/Local.dart';
 import 'package:app_flutter_frikiteam/model/Organizer.dart';
+import 'package:app_flutter_frikiteam/services/event_information_service.dart';
 import 'package:flutter/material.dart';
 import 'package:app_flutter_frikiteam/model/Event.dart';
 
 class EventPage extends StatefulWidget {
-  const EventPage({Key? key}) : super(key: key);
+  Event eventoCorrespondiente;
+  bool seguido;
+  EventPage(
+      {Key? key, required this.eventoCorrespondiente, required this.seguido})
+      : super(key: key);
 
   @override
   State<EventPage> createState() => _EventPageState();
 }
 
 class _EventPageState extends State<EventPage> {
-  bool assist=false;
-  String titleEvent= "hola";
-  String imgEvent="event.img";
-  double priceEvent=0.0;
-  String description="descriptionEvent.description";
-  String imgDescription="descriptionEvent.img";
-  String localAddress="local.address";
-  String imgOrganizer="a";
-  String nameOrganizer="a";
-  String lastNameOrganizer="a";
-  void getData() async{
+  bool assist = false;
+  String titleEvent = "hola";
+  String imgEvent =
+      "https://portal.andina.pe/EDPfotografia3/Thumbnail/2022/03/08/000851626W.jpg";
+  double priceEvent = 0.0;
+  String description = "descriptionEvent.description";
+  String imgDescription =
+      "https://portal.andina.pe/EDPfotografia3/Thumbnail/2022/03/08/000851626W.jpg";
+  String localAddress = "local.address";
+  String imgOrganizer = "a";
+  String nameOrganizer = "a";
+  String lastNameOrganizer = "a";
+  void getData() async {
+    /* Event event = new Event("Friki Festival",
+        "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg", 50.0);*/
 
-     Event event= new Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",50.0);
+    /*titleEvent = event.title;
+    imgEvent = event.img;
+    priceEvent = event.price;*/
 
-     titleEvent=event.title;
-     imgEvent=event.img;
-     priceEvent=event.price;
+    //DescriptionEvent descriptionEvent=new DescriptionEvent('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tristique velit ut viverra ornare. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nam facilisis egestas turpis, fringilla consequat sem egestas a. Vestibulum sed ante hendrerit, scelerisque tortor a, tincidunt leo. Maecenas eget arcu commodo, imperdiet lorem non, commodo nibh. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi libero nisl, mollis id accumsan vitae, rhoncus a nulla. Quisque vel mattis ex, a gravida erat. Nam euismod risus in elit blandit, ut porta eros eleifend. In posuere volutpat turpis a tempus.Morbi tincidunt tincidunt libero eget condimentum. Integer magna ipsum, consectetur in scelerisque at, pellentesque et nisi. Praesent facilisis aliquam purus non dignissim. Maecenas cursus orci ut luctus dignissim. Nunc sed mi egestas, dignissim odio imperdiet, viverra magna. Mauris id ante dolor. Sed congue eros eget egestas tincidunt. Nam at accumsan dui. Duis ac nisi et diam tincidunt efficitur eu sit amet justo. Ut ac ligula accumsan, vehicula urna a, commodo ante. Ut egestas urna at elit vehicula, vel rutrum erat tempor. Vivamus nec augue pretium, varius enim sed, faucibus velit. Praesent et neque quam.','https://firebasestorage.googleapis.com/v0/b/prueba-43bf8.appspot.com/o/images%2Ffriki%20festival%20informacion%201.jpg?alt=media&token=d6200696-0b53-4488-bd1a-9740c269112c');
 
-     DescriptionEvent descriptionEvent=new DescriptionEvent('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tristique velit ut viverra ornare. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nam facilisis egestas turpis, fringilla consequat sem egestas a. Vestibulum sed ante hendrerit, scelerisque tortor a, tincidunt leo. Maecenas eget arcu commodo, imperdiet lorem non, commodo nibh. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi libero nisl, mollis id accumsan vitae, rhoncus a nulla. Quisque vel mattis ex, a gravida erat. Nam euismod risus in elit blandit, ut porta eros eleifend. In posuere volutpat turpis a tempus.Morbi tincidunt tincidunt libero eget condimentum. Integer magna ipsum, consectetur in scelerisque at, pellentesque et nisi. Praesent facilisis aliquam purus non dignissim. Maecenas cursus orci ut luctus dignissim. Nunc sed mi egestas, dignissim odio imperdiet, viverra magna. Mauris id ante dolor. Sed congue eros eget egestas tincidunt. Nam at accumsan dui. Duis ac nisi et diam tincidunt efficitur eu sit amet justo. Ut ac ligula accumsan, vehicula urna a, commodo ante. Ut egestas urna at elit vehicula, vel rutrum erat tempor. Vivamus nec augue pretium, varius enim sed, faucibus velit. Praesent et neque quam.','https://firebasestorage.googleapis.com/v0/b/prueba-43bf8.appspot.com/o/images%2Ffriki%20festival%20informacion%201.jpg?alt=media&token=d6200696-0b53-4488-bd1a-9740c269112c');
+    /*description=descriptionEvent.description;
+     imgDescription=descriptionEvent.img;*/
 
-     description=descriptionEvent.description;
-     imgDescription=descriptionEvent.img;
+    Local local = new Local("Plaza Mole del sur 760");
+    localAddress = local.address;
 
-     Local local=new Local("Plaza Mole del sur 760");
-     localAddress=local.address;
-
-     Organizer organizer=new Organizer("Luciana","Herrera","https://portal.andina.pe/EDPfotografia3/Thumbnail/2022/03/08/000851626W.jpg","lucia@gmail.com","lucia789");
-     imgOrganizer=organizer.img;
-     nameOrganizer=organizer.name;
-     lastNameOrganizer=organizer.lastName;
+    Organizer organizer = new Organizer(
+        "Luciana",
+        "Herrera",
+        "https://portal.andina.pe/EDPfotografia3/Thumbnail/2022/03/08/000851626W.jpg",
+        "lucia@gmail.com",
+        "lucia789");
+    imgOrganizer = organizer.img;
+    nameOrganizer = organizer.name;
+    lastNameOrganizer = organizer.lastName;
   }
+
+  Future<DescriptionEvent> _getEvento() async {
+    final servicio = DescriptionEventService();
+    final DescriptionEvent evento =
+        await servicio.getEvent(widget.eventoCorrespondiente.id!);
+    print(evento.title);
+    return evento;
+  }
+
   @override
   void initState() {
-    this.getData();
     super.initState();
+    //_getEventa();
+    this.getData();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -72,105 +92,132 @@ class _EventPageState extends State<EventPage> {
           ),
         ),
       ),
-      body: ListView(
-        children: [
-          _heroImage(),
-          Container(
-            margin: EdgeInsets.only(top: 20),
-            height: 60,
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Stack(
+      body: FutureBuilder<DescriptionEvent>(
+        future: _getEvento(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return ListView(
               children: [
-                 Center(
-                    child: Text(titleEvent, style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-                )),
-                Positioned(
-                  top: 3,
-                  left: -18,
-                  child: assist?OutlinedButton(
-                    onPressed: (){
-                      assist=!assist;
-                      setState(() {
-                      });
-                    },
-                    child: Text("UnFollow",style: TextStyle(
-                      fontSize:16,
-                      letterSpacing: 1,
-                      color: Color.fromARGB(255, 209, 108, 14),
-                    ),),
-                    style: OutlinedButton.styleFrom(
-                        side: BorderSide(width: 2,color: Colors.purple),
-                        padding: EdgeInsets.symmetric(horizontal: 6),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
-                    ),
-                  ):ElevatedButton(
-                    onPressed: (){
-                      assist=!assist;
-                      setState(() {
-                      });
-                    },
-                    child:Text("Follow",style: TextStyle(
-                      fontSize:16,
-                      letterSpacing: 2,
-                      color: Colors.white,
-                    ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                        primary: Color.fromARGB(255, 209, 108, 14),
-                        padding: EdgeInsets.symmetric(horizontal: 8),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
-                    ),
+                _heroImage(),
+                Container(
+                  margin: EdgeInsets.only(top: 20),
+                  height: 60,
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Stack(
+                    children: [
+                      Center(
+                          child: Text(
+                        widget.eventoCorrespondiente.name!,
+                        style: TextStyle(
+                            fontSize: 19, fontWeight: FontWeight.bold),
+                      )),
+                      Positioned(
+                        top: 3,
+                        left: -18,
+                        child: widget.seguido
+                            ? OutlinedButton(
+                                onPressed: () {
+                                  widget.seguido = !widget.seguido;
+                                  setState(() {});
+                                },
+                                child: Text(
+                                  "UnFollow",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    letterSpacing: 1,
+                                    color: Color.fromARGB(255, 209, 108, 14),
+                                  ),
+                                ),
+                                style: OutlinedButton.styleFrom(
+                                    side: BorderSide(
+                                        width: 2, color: Colors.purple),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 6),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(50))),
+                              )
+                            : ElevatedButton(
+                                onPressed: () {
+                                  widget.seguido = !widget.seguido;
+                                  //TODO: hacer request de cambio
+                                  setState(() {});
+                                },
+                                child: Text(
+                                  "Follow",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    letterSpacing: 2,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                    primary: Color.fromARGB(255, 209, 108, 14),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(50))),
+                              ),
+                      ),
+                    ],
+                    clipBehavior: Clip.none,
                   ),
                 ),
-              ],
-              clipBehavior: Clip.none,
-            ),
-          ),
-          Container(
-            width: double.infinity,
-            color: const Color(0xFF65295F),
-            child: const Center(
-                child: Text('Itinerario',
-                    style: TextStyle(fontSize: 20, color: Colors.white))),
-          ),
-          _itinerario(),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Center(
-              child: Column(
-                children: [
-                  const Text('Información',
-                      style: TextStyle(fontSize: 20, color: Colors.black)),
-                  const SizedBox(height: 20),
-                   Center(
-                    child: Text(
-                      description,style: TextStyle(letterSpacing: 1.1,height: 1.5),
+                Container(
+                  width: double.infinity,
+                  color: const Color(0xFF65295F),
+                  child: const Center(
+                      child: Text('Itinerario',
+                          style: TextStyle(fontSize: 20, color: Colors.white))),
+                ),
+                _itinerario(),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        const Text('Información',
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.black)),
+                        const SizedBox(height: 20),
+                        Center(
+                          child: Text(
+                            snapshot.data!.description!,
+                            style: TextStyle(letterSpacing: 1.1, height: 1.5),
+                          ),
+                        ),
+                        _promotionalImage(snapshot.data!.image!.toString()),
+                        const Text('Ubicación',
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.black)),
+                        const SizedBox(height: 20),
+                        Text(localAddress),
+                        const SizedBox(height: 20),
+                        const Text('Organizador',
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.black)),
+                        const SizedBox(height: 20),
+                        _organizador(),
+                        Text(nameOrganizer + " " + lastNameOrganizer,
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.black)),
+                        const SizedBox(height: 30),
+                        _asistirButton(),
+                        const SizedBox(height: 10),
+                      ],
                     ),
                   ),
-                  _promotionalImage(),
-                  const Text('Ubicación',
-                      style: TextStyle(fontSize: 20, color: Colors.black)),
-                  const SizedBox(height: 20),
-                  Text(localAddress),
-                  const SizedBox(height: 20),
-                  const Text('Organizador',
-                      style: TextStyle(fontSize: 20, color: Colors.black)),
-                  const SizedBox(height: 20),
-                  _organizador(),
-                  Text(nameOrganizer+" "+lastNameOrganizer,
-                      style: TextStyle(fontSize: 20, color: Colors.black)),
-                  const SizedBox(height: 30),
-                  _asistirButton(),
-                  const SizedBox(height: 10),
-                ],
-              ),
-            ),
-          )
-        ],
+                )
+              ],
+            );
+          } else {
+            return CircularProgressIndicator();
+          }
+        },
       ),
-
     );
   }
 
@@ -178,19 +225,16 @@ class _EventPageState extends State<EventPage> {
     return Container(
         height: 200,
         width: double.infinity,
-        child: Image.network(
-            imgEvent,
+        child: Image.network(widget.eventoCorrespondiente.logo!,
             fit: BoxFit.cover));
   }
 
-  Container _promotionalImage() {
+  Container _promotionalImage(String img) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 20),
       height: 150,
       width: double.infinity,
-      child: Image.network(
-          imgDescription,
-          fit: BoxFit.cover),
+      child: Image.network(img, fit: BoxFit.cover),
     );
   }
 
@@ -221,29 +265,24 @@ class _EventPageState extends State<EventPage> {
   Widget _organizador() {
     return CircleAvatar(
       radius: 50,
-      backgroundImage: NetworkImage(
-         imgOrganizer),
+      backgroundImage: NetworkImage(imgOrganizer),
     );
   }
 
   Widget _asistirButton() {
     return ElevatedButton(
       onPressed: () {
-
         setState(() {
           showModalBottomSheet(
               context: context,
               builder: (BuildContext context) {
                 /*return _modalBottom();*/
                 return StatefulBuilder(
-                    builder: (BuildContext context,StateSetter setState ){
-
-                      return _modalBottom();
-                    }
-                );
+                    builder: (BuildContext context, StateSetter setState) {
+                  return _modalBottom();
+                });
               });
         });
-
       },
       style: ElevatedButton.styleFrom(
         primary: Color.fromARGB(255, 209, 108, 14),
@@ -262,7 +301,6 @@ class _EventPageState extends State<EventPage> {
   }
 
   Widget _modalBottom() {
-
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       height: 400,
@@ -312,9 +350,7 @@ class _EventPageState extends State<EventPage> {
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  setState(() {
-
-                  });
+                  setState(() {});
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Color.fromARGB(255, 209, 108, 14),

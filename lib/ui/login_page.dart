@@ -1,3 +1,4 @@
+import 'package:app_flutter_frikiteam/services/login_service.dart';
 import 'package:app_flutter_frikiteam/ui/friki_main.dart';
 import 'package:app_flutter_frikiteam/ui/organizer_main.dart';
 import 'package:app_flutter_frikiteam/ui/register_page.dart';
@@ -18,6 +19,14 @@ class _LoginPageState extends State<LoginPage> {
   String _email = "";
   String _password = "";
   String _userType = "Tipo de usuario";
+
+  bool _emailVerification = false;
+  bool _passwordVerification = false;
+
+  List dataRequestFriki = [];
+  List dataRequestOrganizer = [];
+
+  VerifyUser verifyUser = VerifyUser();
 
   @override
   Widget build(BuildContext context) {
@@ -163,20 +172,44 @@ class _LoginPageState extends State<LoginPage> {
                               _password = passwordController.text;
                               print("Email: " + _email);
                               print("Password: " + _password);
-                              print("User type: " + _userType);
+                              //print("User type: " + _userType);
 
                               if(_userType == "Usuario Friki"){
-                                /*Navigator.of(context).pushNamed('/friki');*/
-                                Navigator.pushNamedAndRemoveUntil(context,'friki', ((route) => false));
-                                print("Vista usuario friki");
+                                verifyUser.makeRequestFriki();
+                                dataRequestFriki = verifyUser.dataRequestFriki;
+
+                                for (int i = 0; i < dataRequestFriki.length; i++){
+                                  if(_email == dataRequestFriki[i]["email"]){
+                                    _emailVerification = true;
+                                  }
+                                  if(_password == dataRequestFriki[i]["password"]){
+                                    _passwordVerification = true;
+                                  }
+                                }
+
+                                _passwordVerification && _emailVerification? Navigator.pushNamedAndRemoveUntil(context,'friki', ((route) => false)) : print("Usuario y/o contraseña incorrectas. ");
+                                _passwordVerification = _emailVerification = false;
+
+                                //print("Vista organizador");
                               }else if (_userType == "Organizador"){
-                                /*Navigator.push(
-                                    context, 
-                                    MaterialPageRoute(builder: (context) => const MainOrganizer()));*/
-                                Navigator.pushNamedAndRemoveUntil(context,'organizer', ((route) => false));
-                                print("Vista organizador");
+                                verifyUser.makeRequestOrganizer();
+                                dataRequestOrganizer = verifyUser.dataRequestOrganizer;
+
+                                for (int i = 0; i < dataRequestOrganizer.length; i++){
+                                  if(_email == dataRequestOrganizer[i]["email"]){
+                                    _emailVerification = true;
+                                  }
+                                  if(_password == dataRequestOrganizer[i]["password"]){
+                                    _passwordVerification = true;
+                                  }
+                                }
+
+                                _passwordVerification && _emailVerification? Navigator.pushNamedAndRemoveUntil(context,'organizer', ((route) => false)) : print("Usuario y/o contraseña incorrectas. ");
+                                _passwordVerification = _emailVerification = false;
+
                               }else{
                                 print("Escoga un tipo de usuario");
+                                _passwordVerification = _emailVerification = false;
                               }
                             },
                           ),

@@ -17,12 +17,15 @@ class _EventOrganizerState extends State<EventOrganizer> {
   bool editInfo = false;
   bool assist = false;
   static String titleEvent = "hola";
-  String imgEvent = "event.img";
+  String imgEvent =
+      "https://cdn-az.allevents.in/events4/banners/0c79c7451e23f0e2e4363eb09ede8a109864a2f0dd5a6341a18a4f0060c22500-rimg-w500-h262-gmir.jpg?v=1655862415";
   double priceEvent = 0.0;
   String description = "descriptionEvent.description";
-  String imgDescription = "descriptionEvent.img";
+  String imgDescription =
+      "https://cdn-az.allevents.in/events4/banners/0c79c7451e23f0e2e4363eb09ede8a109864a2f0dd5a6341a18a4f0060c22500-rimg-w500-h262-gmir.jpg?v=1655862415";
   static String localAddress = "local.address";
-  String imgOrganizer = "a";
+  String imgOrganizer =
+      "https://cdn-az.allevents.in/events4/banners/0c79c7451e23f0e2e4363eb09ede8a109864a2f0dd5a6341a18a4f0060c22500-rimg-w500-h262-gmir.jpg?v=1655862415";
   String nameOrganizer = "a";
   String lastNameOrganizer = "a";
 
@@ -42,7 +45,8 @@ class _EventOrganizerState extends State<EventOrganizer> {
     Local local = new Local("Plaza Mole del sur 760");
     localAddress = local.address;
 
-    imgOrganizer = 'organizer.img';
+    imgOrganizer =
+        'https://cdn-az.allevents.in/events4/banners/0c79c7451e23f0e2e4363eb09ede8a109864a2f0dd5a6341a18a4f0060c22500-rimg-w500-h262-gmir.jpg?v=1655862415';
     nameOrganizer = 'organizer.name';
     lastNameOrganizer = 'organizer.lastName';
   }

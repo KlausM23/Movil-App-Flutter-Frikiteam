@@ -1,7 +1,6 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:app_flutter_frikiteam/services/organized_service.dart';
 import 'package:flutter/material.dart';
-import 'package:app_flutter_frikiteam/model/Organizer.dart';
-import 'package:app_flutter_frikiteam/ui/login_page.dart';
 
 class OrganizerProfile extends StatefulWidget {
   const OrganizerProfile({Key? key}) : super(key: key);
@@ -14,10 +13,39 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
   //static Organizer organizer = new Organizer("Abel", "Gutierrez", "https://cdn2.rsvponline.mx/files/rsvp/styles/wide/public/images/main/2016/horentrepre.jpg","abelGuti@gmail.com","abcde");
   bool edit = false;
   bool showPassword = false;
-  static String emailEdit = 'organizer.email';
-  static String passwordEdit = 'organizer.password';
-  static String nameEdit = 'organizer.name';
-  static String lastNameEdit = 'organizer.lastName';
+  static String emailEdit = '';
+  static String passwordEdit = '';
+  static String nameEdit = '';
+  static String lastNameEdit = '';
+
+  Future<void> getOrganizer() async {
+    final organizerService = OrganizerService();
+    final organizer = await organizerService.getSomeOrganized(5);
+    setState(() {
+      emailEdit = organizer.email!;
+      passwordEdit = organizer.password!;
+      nameEdit = organizer.firstName!;
+      lastNameEdit = organizer.lastName!;
+    });
+  }
+
+  Future<void> editOrganizer() async {
+    final organizerService = OrganizerService();
+    final organizer = await organizerService.editOrganizer(
+        5,
+        nameEdit,
+        lastNameEdit,
+        emailEdit,
+        passwordEdit,
+        'https://images.startups.co.uk/wp-content/uploads/2017/06/Job-offer-new-employee-1.jpg?width=709&height=460&fit=crop',
+        '');
+    setState(() {
+      emailEdit = organizer.email!;
+      passwordEdit = organizer.password!;
+      nameEdit = organizer.firstName!;
+      lastNameEdit = organizer.lastName!;
+    });
+  }
 
   TextEditingController myControllerEmail =
       TextEditingController(text: emailEdit);
@@ -34,18 +62,25 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    getOrganizer();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       height: double.infinity,
       child: Container(
-          padding: EdgeInsets.only(top: 5, bottom: 12, left: 10, right: 10),
+          padding:
+              const EdgeInsets.only(top: 5, bottom: 12, left: 10, right: 10),
           width: MediaQuery.of(context).size.width,
           color: Colors.white,
           child: ListView(
             children: [
               Container(
-                  padding: EdgeInsets.only(right: 10),
+                  padding: const EdgeInsets.only(right: 10),
                   alignment: Alignment.topRight,
                   /*Navigator.push(
             context,
@@ -56,14 +91,14 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
                       Navigator.pushNamedAndRemoveUntil(
                           context, 'login', ((route) => false));
                     },
-                    child: Icon(
+                    child: const Icon(
                       Icons.exit_to_app,
                       color: Colors.red,
                       size: 35,
                     ),
                   )),
               Container(
-                padding: EdgeInsets.only(top: 5, bottom: 2),
+                padding: const EdgeInsets.only(top: 5, bottom: 2),
                 width: MediaQuery.of(context).size.width,
                 alignment: Alignment.center,
                 child: Stack(
@@ -81,7 +116,7 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
                             )
                           ],
                           shape: BoxShape.circle,
-                          image: DecorationImage(
+                          image: const DecorationImage(
                               fit: BoxFit.cover,
                               image: NetworkImage(
                                   'https://images.startups.co.uk/wp-content/uploads/2017/06/Job-offer-new-employee-1.jpg?width=709&height=460&fit=crop'))),
@@ -99,7 +134,7 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
                               color: Colors.blue,
                             ),
                             child: GestureDetector(
-                              child: Icon(
+                              child: const Icon(
                                 Icons.edit,
                                 color: Colors.white,
                               ),
@@ -121,7 +156,7 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Container(
@@ -325,8 +360,9 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
                         borderRadius: BorderRadius.circular(50))),
               ),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   edit = !edit;
+                  await editOrganizer();
                   setState(() {
                     nameEdit = myControllerName.text;
                     lastNameEdit = myControllerLastName.text;

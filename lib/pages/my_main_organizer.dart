@@ -1,3 +1,4 @@
+import 'package:app_flutter_frikiteam/services/event_service.dart';
 import 'package:flutter/material.dart';
 import 'package:app_flutter_frikiteam/model/Event.dart';
 
@@ -9,10 +10,20 @@ class MyMainOrganizer extends StatefulWidget {
 }
 
 class _MyMainOrganizerState extends State<MyMainOrganizer> {
-  List<Event> events = [
-    /*Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",100.0),
-    Event("Otaku Fest", "https://i.ytimg.com/vi/_tI92lcuN7A/maxresdefault.jpg",50.0),*/
-  ];
+  List<Event> events = [];
+  Future<void> getEvents() async {
+    final organizerService = EventService();
+    final events = await organizerService.getEventsByOrganizer(5);
+    setState(() {
+      this.events = events;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getEvents();
+  }
 
   @override
   Widget build(BuildContext context) {

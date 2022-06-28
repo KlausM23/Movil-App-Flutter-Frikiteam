@@ -35,7 +35,9 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return SizedBox(
+      width: double.infinity,
+      height: double.infinity,
       child: Container(
           padding: EdgeInsets.only(top: 5, bottom: 12, left: 10, right: 10),
           width: MediaQuery.of(context).size.width,
@@ -82,7 +84,7 @@ class _OrganizerProfileState extends State<OrganizerProfile> {
                           image: DecorationImage(
                               fit: BoxFit.cover,
                               image: NetworkImage(
-                                  'https://steamuserimages-a.akamaihd.net/ugc/915797707427426369/E3349D95D23CAFA4CCC53DC56D4381BE6534FC42'))),
+                                  'https://images.startups.co.uk/wp-content/uploads/2017/06/Job-offer-new-employee-1.jpg?width=709&height=460&fit=crop'))),
                       alignment: Alignment.center,
                     ),
                     Positioned(

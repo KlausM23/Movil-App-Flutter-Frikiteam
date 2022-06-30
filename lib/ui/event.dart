@@ -208,7 +208,7 @@ class _EventPageState extends State<EventPage> {
                     const Text('Ubicación',
                         style: TextStyle(fontSize: 20, color: Colors.black)),
                     const SizedBox(height: 20),
-                    Text(localAddress),
+                    Text(widget.eventoCorrespondiente.information!),
                     const SizedBox(height: 20),
                     const Text('Organizador',
                         style: TextStyle(fontSize: 20, color: Colors.black)),

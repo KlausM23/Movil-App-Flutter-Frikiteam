@@ -1,3 +1,5 @@
+import 'package:app_flutter_frikiteam/services/event_service.dart';
+import 'package:app_flutter_frikiteam/ui/event_organizer.dart';
 import 'package:flutter/material.dart';
 import 'package:app_flutter_frikiteam/model/Event.dart';
 
@@ -9,10 +11,20 @@ class MyMainOrganizer extends StatefulWidget {
 }
 
 class _MyMainOrganizerState extends State<MyMainOrganizer> {
-  List<Event> events = [
-    /*Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",100.0),
-    Event("Otaku Fest", "https://i.ytimg.com/vi/_tI92lcuN7A/maxresdefault.jpg",50.0),*/
-  ];
+  List<Event> events = [];
+  Future<void> getEvents() async {
+    final organizerService = EventService();
+    final events = await organizerService.getEventsByOrganizer(5);
+    setState(() {
+      this.events = events;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getEvents();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +48,7 @@ class _MyMainOrganizerState extends State<MyMainOrganizer> {
                 child: ListView.builder(
                     itemBuilder: (context, index) {
                       final event = events[index];
-                      return EventListItem(event);
+                      return EventListItem(event, getEvents());
                     },
                     itemCount: events.length)),
             FloatingActionButton(
@@ -56,13 +68,17 @@ class _MyMainOrganizerState extends State<MyMainOrganizer> {
 
 class EventListItem extends StatelessWidget {
   final Event event;
-  const EventListItem(this.event, {Key? key}) : super(key: key);
+  final Future<void> getEvents;
+  const EventListItem(this.event, this.getEvents, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, 'eventOrganizer');
+      onTap: () async {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return EventOrganizer(evento: event);
+        }));
+        //await getEvents;
       },
       child: Container(
         height: 150,

@@ -14,7 +14,7 @@ class AppRoutes {
     'login': (BuildContext context) => const LoginPage(),
     'register': (BuildContext context) => const RegisterPage(),
     //'event': (BuildContext context) => const EventPage(),
-    'eventOrganizer': (BuildContext context) => const EventOrganizer(),
+    //'eventOrganizer': (BuildContext context) => const EventOrganizer(),
     'friki': (BuildContext context) => const MainFriki(),
     'organizer': (BuildContext context) => const MainOrganizer(),
     'addEvent': (BuildContext context) => const AddEvent()

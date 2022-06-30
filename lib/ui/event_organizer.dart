@@ -1,11 +1,14 @@
 import 'package:app_flutter_frikiteam/model/DescriptionEvent.dart';
 import 'package:app_flutter_frikiteam/model/Local.dart';
 import 'package:app_flutter_frikiteam/model/Organizer.dart';
+import 'package:app_flutter_frikiteam/services/event_information_service.dart';
+import 'package:app_flutter_frikiteam/services/event_service.dart';
 import 'package:flutter/material.dart';
 import 'package:app_flutter_frikiteam/model/Event.dart';
 
 class EventOrganizer extends StatefulWidget {
-  const EventOrganizer({Key? key}) : super(key: key);
+  final Event evento;
+  const EventOrganizer({Key? key, required this.evento}) : super(key: key);
 
   @override
   State<EventOrganizer> createState() => _EventOrganizerState();
@@ -16,41 +19,61 @@ class _EventOrganizerState extends State<EventOrganizer> {
   bool editLocal = false;
   bool editInfo = false;
   bool assist = false;
-  static String titleEvent = "hola";
-  String imgEvent = "event.img";
+  bool editPrice = false;
+  String titleEvent = '';
+  String imgEvent = "";
   double priceEvent = 0.0;
   String description = "descriptionEvent.description";
-  String imgDescription = "descriptionEvent.img";
-  static String localAddress = "local.address";
-  String imgOrganizer = "a";
+  String imgDescription =
+      "https://cdn-az.allevents.in/events4/banners/0c79c7451e23f0e2e4363eb09ede8a109864a2f0dd5a6341a18a4f0060c22500-rimg-w500-h262-gmir.jpg?v=1655862415";
+  static String localAddress = "";
+  String imgOrganizer =
+      "https://cdn-az.allevents.in/events4/banners/0c79c7451e23f0e2e4363eb09ede8a109864a2f0dd5a6341a18a4f0060c22500-rimg-w500-h262-gmir.jpg?v=1655862415";
   String nameOrganizer = "a";
   String lastNameOrganizer = "a";
 
   void getData() async {
-    /*Event event = new Event("Friki Festival",
-        "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg", 50.0);
+    titleEvent = widget.evento.name!;
+    imgEvent = widget.evento.logo!;
+    localAddress = widget.evento.information!;
+    priceEvent = widget.evento.price!;
+    final serviceInformation = DescriptionEventService();
+    final descriptionEvent =
+        await serviceInformation.getEvent(widget.evento.id!);
+    setState(() {
+      description = descriptionEvent.description!;
+      imgDescription = descriptionEvent.image!;
+    });
 
-    titleEvent = event.title;
-    imgEvent = event.img;
-    priceEvent = event.price;*/
-/*
-    DescriptionEvent descriptionEvent=new DescriptionEvent('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tristique velit ut viverra ornare. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nam facilisis egestas turpis, fringilla consequat sem egestas a. Vestibulum sed ante hendrerit, scelerisque tortor a, tincidunt leo. Maecenas eget arcu commodo, imperdiet lorem non, commodo nibh. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi libero nisl, mollis id accumsan vitae, rhoncus a nulla. Quisque vel mattis ex, a gravida erat. Nam euismod risus in elit blandit, ut porta eros eleifend. In posuere volutpat turpis a tempus.Morbi tincidunt tincidunt libero eget condimentum. Integer magna ipsum, consectetur in scelerisque at, pellentesque et nisi. Praesent facilisis aliquam purus non dignissim. Maecenas cursus orci ut luctus dignissim. Nunc sed mi egestas, dignissim odio imperdiet, viverra magna. Mauris id ante dolor. Sed congue eros eget egestas tincidunt. Nam at accumsan dui. Duis ac nisi et diam tincidunt efficitur eu sit amet justo. Ut ac ligula accumsan, vehicula urna a, commodo ante. Ut egestas urna at elit vehicula, vel rutrum erat tempor. Vivamus nec augue pretium, varius enim sed, faucibus velit. Praesent et neque quam.','https://firebasestorage.googleapis.com/v0/b/prueba-43bf8.appspot.com/o/images%2Ffriki%20festival%20informacion%201.jpg?alt=media&token=d6200696-0b53-4488-bd1a-9740c269112c');
-
-    description=descriptionEvent.description;
-    imgDescription=descriptionEvent.img;*/
-
-    Local local = new Local("Plaza Mole del sur 760");
-    localAddress = local.address;
-
-    imgOrganizer = 'organizer.img';
+    imgOrganizer =
+        'https://cdn-az.allevents.in/events4/banners/0c79c7451e23f0e2e4363eb09ede8a109864a2f0dd5a6341a18a4f0060c22500-rimg-w500-h262-gmir.jpg?v=1655862415';
     nameOrganizer = 'organizer.name';
     lastNameOrganizer = 'organizer.lastName';
   }
 
   @override
   void initState() {
-    this.getData();
+    getData();
     super.initState();
+  }
+
+  Future<void> _editEvent(String infoController, String nameController,
+      String priceController) async {
+    final service = EventService();
+    await service.editEvent(
+        5,
+        widget.evento.id!,
+        Event(
+          name: nameController,
+          logo: widget.evento.logo!,
+          information: infoController,
+          price: double.parse(priceController),
+          quantity: widget.evento.quantity!,
+          verified: widget.evento.verified!,
+          startDate: widget.evento.startDate!,
+          endDate: widget.evento.endDate!,
+          placeId: widget.evento.placeId!,
+        ));
   }
 
   @override
@@ -61,6 +84,8 @@ class _EventOrganizerState extends State<EventOrganizer> {
         TextEditingController(text: localAddress);
     TextEditingController myControllerInfo =
         TextEditingController(text: description);
+    TextEditingController myControllerPrice =
+        TextEditingController(text: priceEvent.toString());
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
@@ -135,13 +160,16 @@ class _EventOrganizerState extends State<EventOrganizer> {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {
-                          editTitle = !editTitle;
+                        onPressed: () async {
+                          await _editEvent(myControllerLocal.text,
+                              myControllerTitle.text, myControllerPrice.text);
                           setState(() {
                             titleEvent = myControllerTitle.text;
                           });
+
+                          editTitle = !editTitle;
                         },
-                        child: Text(
+                        child: const Text(
                           "Save",
                           style: TextStyle(
                             fontSize: 14,
@@ -170,14 +198,6 @@ class _EventOrganizerState extends State<EventOrganizer> {
                     ],
                   ),
           ),
-          Container(
-            width: double.infinity,
-            color: const Color(0xFF65295F),
-            child: const Center(
-                child: Text('Itinerario',
-                    style: TextStyle(fontSize: 20, color: Colors.white))),
-          ),
-          _itinerario(),
           Container(
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -336,10 +356,102 @@ class _EventOrganizerState extends State<EventOrganizer> {
                               ),
                             ),
                             ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
+                                await _editEvent(
+                                    myControllerLocal.text,
+                                    myControllerTitle.text,
+                                    myControllerPrice.text);
                                 editLocal = !editLocal;
                                 setState(() {
                                   localAddress = myControllerLocal.text;
+                                });
+                              },
+                              child: Text(
+                                "Save",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  letterSpacing: 1,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                  primary: Colors.purple,
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(50))),
+                            ),
+                          ],
+                        ),
+                  const SizedBox(height: 20),
+                  //PRICE
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Precio',
+                          style: TextStyle(fontSize: 20, color: Colors.black)),
+                      editLocal == false
+                          ? GestureDetector(
+                              onTap: () {
+                                editPrice = !editPrice;
+                                setState(() {});
+                              },
+                              child: Icon(Icons.settings))
+                          : GestureDetector(
+                              onTap: () {
+                                editLocal = !editLocal;
+                                setState(() {
+                                  myControllerLocal =
+                                      TextEditingController(text: localAddress);
+                                });
+                              },
+                              child: Icon(
+                                Icons.close,
+                                color: Colors.red,
+                              ))
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  editPrice == false
+                      ? Text(priceEvent.toString())
+                      : Row(
+                          children: [
+                            Flexible(
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                decoration: BoxDecoration(
+                                    color: Color(0xFFC6C6C6),
+                                    borderRadius: BorderRadius.circular(15),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.black26,
+                                        blurRadius: 2,
+                                        offset: Offset(0, 2),
+                                      )
+                                    ]),
+                                height: 35,
+                                child: TextField(
+                                  keyboardType: TextInputType.number,
+                                  cursorColor: Colors.purple,
+                                  controller: myControllerPrice,
+                                  style: const TextStyle(color: Colors.black),
+                                  decoration: const InputDecoration(
+                                      border: InputBorder.none,
+                                      contentPadding:
+                                          EdgeInsets.only(bottom: 10, left: 8)),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            ElevatedButton(
+                              onPressed: () async {
+                                await _editEvent(
+                                    myControllerLocal.text,
+                                    myControllerTitle.text,
+                                    myControllerPrice.text);
+                                editPrice = !editPrice;
+                                setState(() {
+                                  priceEvent =
+                                      double.parse(myControllerPrice.text);
                                 });
                               },
                               child: Text(

@@ -31,25 +31,53 @@ class _ProfileFrikiState extends State<ProfileFriki> {
       });
   }
 
+  //TODO:
+  void _editFriki() async {
+    final friki = await _frikiService.editFriki(Friki(
+        id: 25,
+        dateBirth: 0,
+        email: myControllerEmail.text,
+        firstName: myControllerName.text,
+        lastName: myControllerLastName.text,
+        logo:
+            'https://i.pinimg.com/originals/2c/67/80/2c678002e587299b3511cec86382daf1.jpg',
+        password: myControllerPassword.text));
+    setState(() {
+      nameEdit = friki.firstName!;
+      lastNameEdit = friki.lastName!;
+      emailEdit = friki.email!;
+      passwordEdit = friki.password!;
+    });
+  }
+
+  void _getFriki() async {
+    final friki = await _frikiService.getFriki();
+    setState(() {
+      nameEdit = friki.firstName!;
+      lastNameEdit = friki.lastName!;
+      emailEdit = friki.email!;
+      passwordEdit = friki.password!;
+      myControllerEmail.text = friki.email!;
+      myControllerPassword.text = friki.password!;
+      myControllerName.text = friki.firstName!;
+      myControllerLastName.text = friki.lastName!;
+    });
+  }
+
   @override
   void initState() {
     _getEvents();
     _getOrganizesFollowed();
+    _getFriki();
     super.initState();
   }
 
-  static Friki friki = new Friki(
-      "Renzo",
-      "Romero",
-      "https://t2.pb.ltmcdn.com/es/posts/3/0/1/como_saber_si_le_gustas_a_una_persona_por_whatsapp_5103_orig.jpg",
-      "sergiogg1259@gmail.com",
-      "123456789");
   bool edit = false;
   bool showPassword = false;
-  static String emailEdit = friki.email;
-  static String passwordEdit = friki.password;
-  static String nameEdit = friki.name;
-  static String lastNameEdit = friki.lastName;
+  static String emailEdit = '';
+  static String passwordEdit = '';
+  static String nameEdit = '';
+  static String lastNameEdit = '';
   static List<Organizer> organizers = [];
 
   Future<void> _getOrganizesFollowed() async {
@@ -128,7 +156,8 @@ class _ProfileFrikiState extends State<ProfileFriki> {
                           shape: BoxShape.circle,
                           image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: NetworkImage(friki.img))),
+                              image: NetworkImage(
+                                  'https://i.pinimg.com/originals/2c/67/80/2c678002e587299b3511cec86382daf1.jpg'))),
                       alignment: Alignment.center,
                     ),
                     Positioned(
@@ -413,12 +442,7 @@ class _ProfileFrikiState extends State<ProfileFriki> {
             ElevatedButton(
               onPressed: () {
                 edit = !edit;
-                setState(() {
-                  nameEdit = myControllerName.text;
-                  lastNameEdit = myControllerLastName.text;
-                  emailEdit = myControllerEmail.text;
-                  passwordEdit = myControllerPassword.text;
-                });
+                _editFriki();
               },
               child: Text(
                 "Save",

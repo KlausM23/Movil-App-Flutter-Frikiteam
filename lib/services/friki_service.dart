@@ -1,9 +1,42 @@
 import 'package:app_flutter_frikiteam/model/Event.dart';
 import 'package:app_flutter_frikiteam/model/Friki.dart';
+import 'package:app_flutter_frikiteam/model/friki_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class FrikiService {
+  Future<FrikiModel> loginFriki(String email, String password) async {
+    final response = await http.get(Uri.parse(
+        'https://findevents.herokuapp.com/friki/' + email + '/' + password));
+    if (response.statusCode == 200 && response.body != "") {
+      return FrikiModel.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load Friki');
+    }
+  }
+
+  Future<FrikiModel> getFrikiById(int id) async {
+    final response = await http.get(
+        Uri.parse('https://findevents.herokuapp.com/friki/' + id.toString()));
+    if (response.statusCode == 200 && response.body != "") {
+      return FrikiModel.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load Friki');
+    }
+  }
+
+  Future<void> updateFriki(FrikiModel friki, int idFriki) async {
+    final response = await http.put(
+        Uri.parse('https://findevents.herokuapp.com/friki/$idFriki'),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(friki.toJson()));
+    if (response.statusCode == 200 && response.body != "") {
+      return;
+    } else {
+      throw Exception('Failed to update Friki');
+    }
+  }
+
   Future<List<Event>> getFollowEvents() async {
     final response = await http.get(
         Uri.parse(

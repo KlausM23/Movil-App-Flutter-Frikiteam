@@ -1,3 +1,4 @@
+import 'package:app_flutter_frikiteam/model/event_model.dart';
 import 'package:app_flutter_frikiteam/storage/storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -72,6 +73,65 @@ class EventService {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
       final Event eventos = Event.fromJson(jsonResponse);
       return eventos;
+    } else {
+      throw Exception('Failed to load ');
+    }
+  }
+
+  Future<List<EventModel>> getEvents() async {
+    final response = await http
+        .get(Uri.parse("https://findevents.herokuapp.com/event"), headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
+
+    if (response.statusCode == 200 && response.body != '') {
+      final List<dynamic> eventosresponse = json.decode(response.body);
+      final List<EventModel> eventos = eventosresponse
+          .map<EventModel>((json) => EventModel.fromJson(json))
+          .toList();
+      return eventos;
+    } else {
+      throw Exception('Failed to load ');
+    }
+  }
+
+  Future<List<EventModel>> getFollowedEvents(int frikiId) async {
+    final response = await http.get(
+        Uri.parse(
+            "https://findevents.herokuapp.com/follow_event/friki/$frikiId"),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
+
+    if (response.statusCode == 200 && response.body != '') {
+      final List<dynamic> eventosresponse = json.decode(response.body);
+      final List<EventModel> eventos = eventosresponse
+          .map<EventModel>((json) => EventModel.fromJson(json['EVENT_ID']))
+          .toList();
+      return eventos;
+    } else {
+      throw Exception('Failed to load ');
+    }
+  }
+
+  Future<bool> eventIsFollowed(int eventId, int frikiId) async {
+    final response = await http.get(
+        Uri.parse(
+            "https://findevents.herokuapp.com/follow_event/event/$eventId/friki/$frikiId"),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
+
+    if (response.statusCode == 200 && response.body != '') {
+      final List<dynamic> eventosresponse = json.decode(response.body);
+      if (eventosresponse.isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
     } else {
       throw Exception('Failed to load ');
     }

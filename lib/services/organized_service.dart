@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:app_flutter_frikiteam/model/organizer_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:app_flutter_frikiteam/model/Organizer.dart';
 import 'package:app_flutter_frikiteam/storage/storage.dart';
@@ -80,5 +81,21 @@ class OrganizerService {
     } else {
       throw Exception('Failed to load organized');
     }
+  }
+
+  Future<List<OrganizerModel>> getFollowedOrganizers(int frikiId) async {
+    final response = await http.get(
+        Uri.parse(
+            "https://findevents.herokuapp.com/follow_organizer/friki/$frikiId"),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
+    final List<dynamic> jsonResponse = json.decode(response.body);
+    final List<OrganizerModel> organizes = jsonResponse
+        .map<OrganizerModel>(
+            (json) => OrganizerModel.fromJson(json['ORGANIZER_ID']))
+        .toList();
+    return organizes;
   }
 }

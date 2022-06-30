@@ -39,6 +39,8 @@ dependencies:
   animate_do: ^2.1.0
   http: ^0.13.4
   shared_preferences:
+  flutter_bloc: ^8.0.1
+  bloc: ^8.0.3
 
 dev_dependencies:
   flutter_test:

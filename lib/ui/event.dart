@@ -47,6 +47,23 @@ class _EventPageState extends State<EventPage> {
     });
   }
 
+  Future<void> _changeFollow() async {
+    final service = EventService();
+    if (assist == true) {
+      final changedFollowed = await service.unfollowEvente(
+          widget.eventoCorrespondiente.iD!, widget.frikiId);
+      setState(() {
+        assist = changedFollowed;
+      });
+    } else {
+      final changedFollowed = await service.followEvent(
+          widget.eventoCorrespondiente.iD!, widget.frikiId);
+      setState(() {
+        assist = changedFollowed;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -96,9 +113,7 @@ class _EventPageState extends State<EventPage> {
                     child: assist
                         ? OutlinedButton(
                             onPressed: () {
-                              setState(() {
-                                assist = !assist;
-                              });
+                              _changeFollow();
                             },
                             child: Text(
                               "UnFollow",
@@ -117,10 +132,7 @@ class _EventPageState extends State<EventPage> {
                           )
                         : ElevatedButton(
                             onPressed: () {
-                              //TODO: hacer request de cambio
-                              setState(() {
-                                assist = !assist;
-                              });
+                              _changeFollow();
                             },
                             child: Text(
                               "Follow",

@@ -48,7 +48,7 @@ class _MainFrikiState extends State<MainFriki> {
               controller: pageController,
               physics: const NeverScrollableScrollPhysics(),
               children: [
-                const SearchFriki(),
+                SearchFriki(state.usuario),
                 MyMainFriki(state.usuario),
                 ProfileFriki(state.usuario)
               ],

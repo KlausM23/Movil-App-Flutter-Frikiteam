@@ -136,4 +136,39 @@ class EventService {
       throw Exception('Failed to load ');
     }
   }
+
+  Future<bool> unfollowEvente(int id_event, int id_friki) async {
+    final response = await http.delete(
+        Uri.parse(
+            'https://findevents.herokuapp.com/follow_event/friki/$id_friki/event/$id_event'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
+
+    if (response.statusCode == 200 && response.body != '') {
+      return false;
+    } else {
+      throw Exception('Failed to load ');
+    }
+  }
+
+  Future<bool> followEvent(int idEvent, int idFriki) async {
+    final response = await http.post(
+        Uri.parse('https://findevents.herokuapp.com/follow_event'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode({
+          'FRIKI_ID': idFriki,
+          'EVENT_ID': idEvent,
+        }));
+
+    if (response.statusCode == 201 && response.body != '') {
+      return true;
+    } else {
+      throw Exception('Failed to load ');
+    }
+  }
 }

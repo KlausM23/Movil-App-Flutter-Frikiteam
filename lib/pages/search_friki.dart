@@ -1,4 +1,5 @@
 import 'package:app_flutter_frikiteam/model/event_model.dart';
+import 'package:app_flutter_frikiteam/model/friki_model.dart';
 import 'package:app_flutter_frikiteam/services/event_service.dart';
 import 'package:app_flutter_frikiteam/services/friki_service.dart';
 import 'package:app_flutter_frikiteam/ui/event.dart';
@@ -6,28 +7,25 @@ import 'package:flutter/material.dart';
 import 'package:app_flutter_frikiteam/model/Event.dart';
 
 class SearchFriki extends StatefulWidget {
-  const SearchFriki({Key? key}) : super(key: key);
+  final FrikiModel usuario;
+  SearchFriki(this.usuario, {Key? key}) : super(key: key);
 
   @override
   State<SearchFriki> createState() => _SearchFrikiState();
 }
 
 class _SearchFrikiState extends State<SearchFriki> {
-  static List<EventModel> eventsSearch = [
-    /* Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",20),
-    Event("Otaku Fest", "https://i.ytimg.com/vi/_tI92lcuN7A/maxresdefault.jpg",10),
-    Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",50),
-    Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",50),*/
-  ];
+  static List<EventModel> eventsSearch = [];
   List<EventModel> eventsFollow = [];
   final _eventService = EventService();
   final _frikiService = FrikiService();
-  void _getEvents() async {
-    final events = await _eventService.getAllEvents();
-    if (mounted)
+  Future<void> _getEvents() async {
+    final events = await _eventService.getEvents();
+    if (mounted) {
       setState(() {
-        //eventsSearch = events;
+        eventsSearch = events;
       });
+    }
   }
 
   @override
@@ -69,8 +67,8 @@ class _SearchFrikiState extends State<SearchFriki> {
             TextField(
               onChanged: (value) => updateList(value),
               cursorColor: Colors.purple,
-              style: TextStyle(color: Colors.black),
-              decoration: InputDecoration(
+              style: const TextStyle(color: Colors.black),
+              decoration: const InputDecoration(
                 filled: true,
                 fillColor: Color(0xFFC6C6C6),
                 border: OutlineInputBorder(
@@ -83,12 +81,12 @@ class _SearchFrikiState extends State<SearchFriki> {
                 ), //pre es que va al inicio
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 15.0,
             ),
             Expanded(
                 child: eventsList.length == 0
-                    ? Center(
+                    ? const Center(
                         child: Text(
                         "Sin resultados",
                         style: TextStyle(
@@ -100,7 +98,7 @@ class _SearchFrikiState extends State<SearchFriki> {
                     : ListView.builder(
                         itemBuilder: (context, index) {
                           final event = eventsList[index];
-                          return EventListItem(this.eventsFollow, event);
+                          return EventListItem(event, widget.usuario.iD!);
                         },
                         itemCount: eventsList.length)),
           ],
@@ -112,27 +110,20 @@ class _SearchFrikiState extends State<SearchFriki> {
 
 class EventListItem extends StatelessWidget {
   final EventModel event;
-  List<EventModel> eventsFollow;
-  EventListItem(this.eventsFollow, this.event, {Key? key}) : super(key: key);
+  final int frikiId;
+  EventListItem(this.event, this.frikiId, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        /* 
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => EventPage(eventoCorrespondiente: event),
+            builder: (context) =>
+                EventPage(eventoCorrespondiente: event, frikiId: frikiId),
           ),
         );
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EventPage(eventoCorrespondiente: event),
-          ),
-        );*/
       },
       child: Container(
         height: 150,

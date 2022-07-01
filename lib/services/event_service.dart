@@ -5,73 +5,20 @@ import 'dart:convert';
 import 'package:app_flutter_frikiteam/model/Event.dart';
 
 class EventService {
-  Future<List<Event>> getAllEvents() async {
+  Future<List<EventModel>> getEventsByOrganizer(int id, String punto) async {
     final response = await http.get(
-        Uri.parse("https://api-frikiteam.herokuapp.com/api/events"),
+        Uri.parse("https://findevents.herokuapp.com/organizer/evento/$id"),
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          'Accept': 'application/json'
         });
-    if (response.statusCode == 200) {
-      final List<dynamic> jsonResponse = json.decode(response.body);
-
-      final List<Event> eventos =
-          jsonResponse.map<Event>((json) => Event.fromJson(json)).toList();
-      return eventos;
-    } else {
-      throw Exception('Failed to load ');
-    }
-  }
-
-  Future<List<Event>> getEventsByOrganizer(int id) async {
-    final storage = Storage();
-    final response = await http.get(
-        Uri.parse(
-            "https://api-frikiteam.herokuapp.com/api/organizers/$id/events"),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer ${await storage.getToken()}'
-        });
+    print('Peticion response organizer' + punto);
     print(response.body);
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonResponse = json.decode(response.body);
-      final List<Event> eventos = jsonResponse['content']
-          .map<Event>((json) => Event.fromJson(json))
+    if (response.statusCode == 200 && response.body != '') {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body)[0];
+      final List<EventModel> eventos = jsonResponse['events']
+          .map<EventModel>((json) => EventModel.fromJson(json))
           .toList();
-      return eventos;
-    } else {
-      throw Exception('Failed to load ');
-    }
-  }
-
-  Future<Event> editEvent(
-      int organizerId, int eventId, Event eventoModificado) async {
-    final storage = Storage();
-
-    final response = await http.put(
-        Uri.parse(
-            "https://api-frikiteam.herokuapp.com/api/organizers/$organizerId/events/$eventId"),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer ${await storage.getToken()}'
-        },
-        body: jsonEncode({
-          'logo': eventoModificado.logo,
-          'information': eventoModificado.information,
-          'name': eventoModificado.name,
-          'price': eventoModificado.price,
-          'quantity': eventoModificado.quantity,
-          'verified': eventoModificado.verified,
-          'startDate': eventoModificado.startDate,
-          'endDate': eventoModificado.endDate,
-          'placeId': eventoModificado.placeId,
-          'sold': 1,
-        }));
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonResponse = json.decode(response.body);
-      final Event eventos = Event.fromJson(jsonResponse);
       return eventos;
     } else {
       throw Exception('Failed to load ');
@@ -167,6 +114,39 @@ class EventService {
 
     if (response.statusCode == 201 && response.body != '') {
       return true;
+    } else {
+      throw Exception('Failed to load ');
+    }
+  }
+
+  Future<void> addEvent(EventModel evento) async {
+    final response =
+        await http.post(Uri.parse('https://findevents.herokuapp.com/event'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: jsonEncode(evento.toJson()));
+    if (response.statusCode == 201 && response.body != '') {
+      return;
+    } else {
+      throw Exception('Failed to load ');
+    }
+  }
+
+  Future<void> editEvent(EventModel evento, int eventId) async {
+    final response = await http.put(
+        Uri.parse('https://findevents.herokuapp.com/event/$eventId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode(evento.toJson()));
+    print(evento.organizerModel);
+    print(jsonEncode(evento.toJson()));
+    print(response.body);
+    if (response.statusCode == 200 && response.body != '') {
+      return;
     } else {
       throw Exception('Failed to load ');
     }

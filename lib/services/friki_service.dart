@@ -90,4 +90,19 @@ class FrikiService {
       throw Exception('Failed to load friki');
     }
   }
+
+  Future<void> addFriki(FrikiModel friki) async {
+    final response =
+        await http.post(Uri.parse('https://findevents.herokuapp.com/friki'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: jsonEncode(friki.toJson()));
+    if (response.statusCode == 201 && response.body != "") {
+      return;
+    } else {
+      throw Exception('Failed to add friki');
+    }
+  }
 }

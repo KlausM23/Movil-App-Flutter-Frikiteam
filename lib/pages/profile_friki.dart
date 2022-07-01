@@ -36,12 +36,14 @@ class _ProfileFrikiState extends State<ProfileFriki> {
   }
 
   Future<void> _getOrganizesFollowed(int id) async {
-    try {
-      final service = OrganizerService();
-      organizers = await service.getFollowedOrganizers(id);
-      setState(() {});
-    } catch (e) {
-      throw Exception(e.toString());
+    if (mounted) {
+      try {
+        final service = OrganizerService();
+        organizers = await service.getFollowedOrganizers(id);
+        setState(() {});
+      } catch (e) {
+        throw Exception(e.toString());
+      }
     }
   }
 

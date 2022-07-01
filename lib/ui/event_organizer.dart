@@ -1,14 +1,18 @@
 import 'package:app_flutter_frikiteam/model/DescriptionEvent.dart';
 import 'package:app_flutter_frikiteam/model/Local.dart';
 import 'package:app_flutter_frikiteam/model/Organizer.dart';
+import 'package:app_flutter_frikiteam/model/event_model.dart';
+import 'package:app_flutter_frikiteam/model/organizer_model.dart';
 import 'package:app_flutter_frikiteam/services/event_information_service.dart';
 import 'package:app_flutter_frikiteam/services/event_service.dart';
 import 'package:flutter/material.dart';
 import 'package:app_flutter_frikiteam/model/Event.dart';
 
 class EventOrganizer extends StatefulWidget {
-  final Event evento;
-  const EventOrganizer({Key? key, required this.evento}) : super(key: key);
+  final EventModel evento;
+  final OrganizerModel organizer;
+  const EventOrganizer(this.evento, this.organizer, {Key? key})
+      : super(key: key);
 
   @override
   State<EventOrganizer> createState() => _EventOrganizerState();
@@ -22,58 +26,51 @@ class _EventOrganizerState extends State<EventOrganizer> {
   bool editPrice = false;
   String titleEvent = '';
   String imgEvent = "";
-  double priceEvent = 0.0;
-  String description = "descriptionEvent.description";
-  String imgDescription =
-      "https://cdn-az.allevents.in/events4/banners/0c79c7451e23f0e2e4363eb09ede8a109864a2f0dd5a6341a18a4f0060c22500-rimg-w500-h262-gmir.jpg?v=1655862415";
+  String priceEvent = '';
+  String description = "";
+  String imgDescription = "";
   static String localAddress = "";
-  String imgOrganizer =
-      "https://cdn-az.allevents.in/events4/banners/0c79c7451e23f0e2e4363eb09ede8a109864a2f0dd5a6341a18a4f0060c22500-rimg-w500-h262-gmir.jpg?v=1655862415";
-  String nameOrganizer = "a";
-  String lastNameOrganizer = "a";
+  String imgOrganizer = "";
+  String nameOrganizer = "";
+  String lastNameOrganizer = "";
 
   void getData() async {
-    titleEvent = widget.evento.name!;
-    imgEvent = widget.evento.logo!;
-    localAddress = widget.evento.information!;
-    priceEvent = widget.evento.price!;
-    final serviceInformation = DescriptionEventService();
-    final descriptionEvent =
-        await serviceInformation.getEvent(widget.evento.id!);
-    setState(() {
-      description = descriptionEvent.description!;
-      imgDescription = descriptionEvent.image!;
-    });
-
-    imgOrganizer =
-        'https://cdn-az.allevents.in/events4/banners/0c79c7451e23f0e2e4363eb09ede8a109864a2f0dd5a6341a18a4f0060c22500-rimg-w500-h262-gmir.jpg?v=1655862415';
-    nameOrganizer = 'organizer.name';
-    lastNameOrganizer = 'organizer.lastName';
+    titleEvent = widget.evento.nAMEEVENT!;
+    imgEvent = widget.evento.lOGO!;
+    localAddress = widget.evento.aDDRESS!;
+    priceEvent = widget.evento.pRICE!;
+    description = widget.evento.dESCRIPTION!;
+    imgDescription = widget.evento.lOGO2!;
+    imgOrganizer = widget.organizer.iMAGEORGANIZER!;
+    nameOrganizer = widget.organizer.nAMEORGANIZER!;
+    lastNameOrganizer = widget.organizer.lASTNAMEORGANIZER!;
   }
 
   @override
   void initState() {
-    getData();
     super.initState();
+    getData();
   }
 
   Future<void> _editEvent(String infoController, String nameController,
-      String priceController) async {
+      String priceController, String adressController) async {
     final service = EventService();
-    await service.editEvent(
-        5,
-        widget.evento.id!,
-        Event(
-          name: nameController,
-          logo: widget.evento.logo!,
-          information: infoController,
-          price: double.parse(priceController),
-          quantity: widget.evento.quantity!,
-          verified: widget.evento.verified!,
-          startDate: widget.evento.startDate!,
-          endDate: widget.evento.endDate!,
-          placeId: widget.evento.placeId!,
-        ));
+    try {
+      await service.editEvent(
+          EventModel(
+            aDDRESS: adressController,
+            dESCRIPTION: infoController,
+            nAMEEVENT: nameController,
+            pRICE: priceController,
+            aMOUNT: 0,
+            lOGO2: widget.evento.lOGO2,
+            lOGO: widget.evento.lOGO,
+            organizerModel: widget.organizer,
+          ),
+          widget.evento.iD!);
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -85,7 +82,7 @@ class _EventOrganizerState extends State<EventOrganizer> {
     TextEditingController myControllerInfo =
         TextEditingController(text: description);
     TextEditingController myControllerPrice =
-        TextEditingController(text: priceEvent.toString());
+        TextEditingController(text: priceEvent);
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
@@ -161,8 +158,11 @@ class _EventOrganizerState extends State<EventOrganizer> {
                       ),
                       ElevatedButton(
                         onPressed: () async {
-                          await _editEvent(myControllerLocal.text,
-                              myControllerTitle.text, myControllerPrice.text);
+                          await _editEvent(
+                              myControllerInfo.text,
+                              myControllerTitle.text,
+                              myControllerPrice.text,
+                              myControllerLocal.text);
                           setState(() {
                             titleEvent = myControllerTitle.text;
                           });
@@ -273,7 +273,12 @@ class _EventOrganizerState extends State<EventOrganizer> {
                                   ),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: () async {
+                                    await _editEvent(
+                                        myControllerInfo.text,
+                                        myControllerTitle.text,
+                                        myControllerPrice.text,
+                                        myControllerLocal.text);
                                     editInfo = !editInfo;
                                     setState(() {
                                       description = myControllerInfo.text;
@@ -358,9 +363,10 @@ class _EventOrganizerState extends State<EventOrganizer> {
                             ElevatedButton(
                               onPressed: () async {
                                 await _editEvent(
-                                    myControllerLocal.text,
+                                    myControllerInfo.text,
                                     myControllerTitle.text,
-                                    myControllerPrice.text);
+                                    myControllerPrice.text,
+                                    myControllerLocal.text);
                                 editLocal = !editLocal;
                                 setState(() {
                                   localAddress = myControllerLocal.text;
@@ -445,13 +451,13 @@ class _EventOrganizerState extends State<EventOrganizer> {
                             ElevatedButton(
                               onPressed: () async {
                                 await _editEvent(
-                                    myControllerLocal.text,
+                                    myControllerInfo.text,
                                     myControllerTitle.text,
-                                    myControllerPrice.text);
+                                    myControllerPrice.text,
+                                    myControllerLocal.text);
                                 editPrice = !editPrice;
                                 setState(() {
-                                  priceEvent =
-                                      double.parse(myControllerPrice.text);
+                                  priceEvent = myControllerPrice.text;
                                 });
                               },
                               child: Text(

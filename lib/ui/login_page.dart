@@ -168,26 +168,32 @@ class _LoginPageState extends State<LoginPage> {
                                   _password = passwordController.text;
 
                                   if (_userType == "Usuario Friki") {
-                                    final serviceFriki = FrikiService();
-                                    final user = await serviceFriki.loginFriki(
-                                        _email, _password);
-                                    context
-                                        .read<UsuarioBloc>()
-                                        .add(LoginUserEvent(user, 'friki'));
-                                    Navigator.pushNamedAndRemoveUntil(
-                                        context, 'friki', ((route) => false));
+                                    try {
+                                      final serviceFriki = FrikiService();
+                                      final user = await serviceFriki
+                                          .loginFriki(_email, _password);
+                                      context
+                                          .read<UsuarioBloc>()
+                                          .add(LoginUserEvent(user, 'friki'));
+                                      Navigator.pushNamedAndRemoveUntil(
+                                          context, 'friki', ((route) => false));
+                                    } catch (e) {
+                                      print(e);
+                                    }
                                   } else if (_userType == "Organizador") {
                                     try {
-                                      final service = OrganizerService();
-                                      await service.saveToken(
-                                          _email, _password);
+                                      final serviceOrganizer =
+                                          OrganizerService();
+                                      final user = await serviceOrganizer
+                                          .loginOrganizer(_email, _password);
+                                      print(user);
+                                      context.read<UsuarioBloc>().add(
+                                          LoginUserEvent(user, 'organizer'));
+                                      Navigator.pushNamedAndRemoveUntil(context,
+                                          'organizer', ((route) => false));
                                     } catch (e) {
-                                      print('error al guardartoken');
+                                      print(e);
                                     }
-
-                                    Navigator.pushNamedAndRemoveUntil(context,
-                                        'organizer', ((route) => false));
-                                    print("Vista organizador");
                                   } else {
                                     print("Escoga un tipo de usuario");
                                   }

@@ -96,7 +96,7 @@ class _EventPageState extends State<EventPage> {
           children: [
             _heroImage(),
             Container(
-              margin: EdgeInsets.only(top: 20),
+              margin: const EdgeInsets.only(top: 20),
               height: 60,
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 30),

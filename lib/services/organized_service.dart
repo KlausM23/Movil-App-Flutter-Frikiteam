@@ -7,6 +7,22 @@ import 'package:app_flutter_frikiteam/storage/storage.dart';
 class OrganizerService {
   final storage = Storage();
 
+  Future<OrganizerModel> loginOrganizer(String email, String password) async {
+    final response = await http.get(
+        Uri.parse(
+            'https://findevents.herokuapp.com/organizer/$email/$password'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
+    print(response.body);
+    if (response.statusCode == 200) {
+      return OrganizerModel.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load login');
+    }
+  }
+
   Future<void> saveToken(String user, String password) async {
     final response = await http.post(
         Uri.parse('https://api-frikiteam.herokuapp.com/api/auth/sign-in'),
@@ -55,31 +71,19 @@ class OrganizerService {
     return organizes;
   }
 
-  Future<Organizer> editOrganizer(int id, String firstName, String lastName,
-      String email, String password, String logo, String description) async {
+  Future<void> editOrganizer(
+      OrganizerModel organizerEdited, int organizerId) async {
     final response = await http.put(
-      Uri.parse("https://api-frikiteam.herokuapp.com/api/organizers/$id"),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: jsonEncode({
-        'id': id,
-        'firstName': firstName,
-        'lastName': lastName,
-        'email': email,
-        'password': password,
-        'logo': logo,
-        'description': description,
-        'verified': true,
-      }),
-    );
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonResponse = json.decode(response.body);
-      final Organizer organizer = Organizer.fromJson(jsonResponse);
-      return organizer;
+        Uri.parse('https://findevents.herokuapp.com/organizer/$organizerId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode(organizerEdited.toJson()));
+    if (response.statusCode == 200 && response.body != '') {
+      return;
     } else {
-      throw Exception('Failed to load organized');
+      throw Exception('Failed to edit organizer ');
     }
   }
 
@@ -97,5 +101,21 @@ class OrganizerService {
             (json) => OrganizerModel.fromJson(json['ORGANIZER_ID']))
         .toList();
     return organizes;
+  }
+
+  Future<void> addOrganizer(OrganizerModel organizer) async {
+    final response =
+        await http.post(Uri.parse('https://findevents.herokuapp.com/organizer'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: jsonEncode(organizer.toJson()));
+
+    if (response.statusCode == 201 && response.body != '') {
+      return;
+    } else {
+      throw Exception('Failed to add organizer');
+    }
   }
 }

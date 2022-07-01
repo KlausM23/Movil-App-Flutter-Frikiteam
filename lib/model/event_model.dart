@@ -38,16 +38,15 @@ class EventModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['ID'] = iD;
     data['NAME_EVENT'] = nAMEEVENT;
     data['DESCRIPTION'] = dESCRIPTION;
     data['LOGO'] = lOGO;
     data['LOGO2'] = lOGO2;
     data['ADDRESS'] = aDDRESS;
-    data['PRICE'] = pRICE;
+    data['PRICE'] = double.parse(pRICE!);
     data['AMOUNT'] = aMOUNT;
     if (organizerModel != null) {
-      data['ORGANIZER_ID'] = organizerModel!.toJson();
+      data['ORGANIZER_ID'] = organizerModel!.iD!;
     }
     return data;
   }

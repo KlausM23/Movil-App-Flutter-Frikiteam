@@ -25,11 +25,11 @@ class FrikiModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['NAME_FRIKI'] = nAMEFRIKI;
-    data['LASTNAME_FRIKI'] = lASTNAMEFRIKI;
-    data['EMAIL_FRIKI'] = eMAILFRIKI;
-    data['PASSWORD_FRIKI'] = pASSWORDFRIKI;
-    data['IMAGE_FRIKI'] = iMAGEFRIKI;
+    data['NAME_FRIKI'] = nAMEFRIKI!.toString();
+    data['LASTNAME_FRIKI'] = lASTNAMEFRIKI!.toString();
+    data['EMAIL_FRIKI'] = eMAILFRIKI!.toString();
+    data['PASSWORD_FRIKI'] = pASSWORDFRIKI!.toString();
+    data['IMAGE_FRIKI'] = iMAGEFRIKI!.toString();
     return data;
   }
 }

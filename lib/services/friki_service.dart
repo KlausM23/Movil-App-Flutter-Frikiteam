@@ -105,4 +105,60 @@ class FrikiService {
       throw Exception('Failed to add friki');
     }
   }
+
+  Future<bool> followOrganizer(int idOrganizer, int idFriki) async {
+    final response = await http.post(
+        Uri.parse('https://findevents.herokuapp.com/follow_organizer'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode({
+          'FRIKI_ID': idFriki,
+          'ORGANIZER_ID': idOrganizer,
+        }));
+
+    if (response.statusCode == 201 && response.body != '') {
+      return true;
+    } else {
+      throw Exception('Failed to load ');
+    }
+  }
+
+  Future<bool> organizerIsFollowed(int organizerId, int frikiId) async {
+    final response = await http.get(
+        Uri.parse(
+            "https://findevents.herokuapp.com/follow_organizer/organizer/$organizerId/friki/$frikiId"),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
+
+    if (response.statusCode == 200 && response.body != '') {
+      final List<dynamic> eventosresponse = json.decode(response.body);
+      if (eventosresponse.isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      throw Exception('Failed to load ');
+    }
+  }
+
+  Future<bool> unfollowOrganizer(int idOrganizer, int idFriki) async {
+    final response = await http.delete(
+        Uri.parse(
+            'https://findevents.herokuapp.com/follow_organizer/organizer/$idOrganizer/friki/$idFriki'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
+
+    if (response.statusCode == 200 && response.body != '') {
+      return false;
+    } else {
+      throw Exception('Failed to load ');
+    }
+  }
 }

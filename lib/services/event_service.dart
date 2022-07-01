@@ -142,9 +142,6 @@ class EventService {
           'Accept': 'application/json',
         },
         body: jsonEncode(evento.toJson()));
-    print(evento.organizerModel);
-    print(jsonEncode(evento.toJson()));
-    print(response.body);
     if (response.statusCode == 200 && response.body != '') {
       return;
     } else {

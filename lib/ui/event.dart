@@ -4,6 +4,7 @@ import 'package:app_flutter_frikiteam/model/Organizer.dart';
 import 'package:app_flutter_frikiteam/model/event_model.dart';
 import 'package:app_flutter_frikiteam/services/event_information_service.dart';
 import 'package:app_flutter_frikiteam/services/event_service.dart';
+import 'package:app_flutter_frikiteam/services/friki_service.dart';
 import 'package:app_flutter_frikiteam/services/organized_service.dart';
 import 'package:flutter/material.dart';
 import 'package:app_flutter_frikiteam/model/Event.dart';
@@ -21,6 +22,7 @@ class EventPage extends StatefulWidget {
 
 class _EventPageState extends State<EventPage> {
   bool assist = false;
+  bool organizedFollow = false;
   String titleEvent = "hola";
   String imgEvent =
       "https://portal.andina.pe/EDPfotografia3/Thumbnail/2022/03/08/000851626W.jpg";
@@ -47,6 +49,16 @@ class _EventPageState extends State<EventPage> {
     });
   }
 
+  Future<void> _organizerIsFollowed() async {
+    final service = FrikiService();
+    final isFollowed = await service.organizerIsFollowed(
+        widget.eventoCorrespondiente.organizerModel!.iD!, widget.frikiId);
+    print(isFollowed);
+    setState(() {
+      organizedFollow = isFollowed;
+    });
+  }
+
   Future<void> _changeFollow() async {
     final service = EventService();
     if (assist == true) {
@@ -64,11 +76,29 @@ class _EventPageState extends State<EventPage> {
     }
   }
 
+  Future<void> _changeOrganizeFollow() async {
+    final service = FrikiService();
+    if (organizedFollow == true) {
+      final changedFollowed = await service.unfollowOrganizer(
+          widget.eventoCorrespondiente.organizerModel!.iD!, widget.frikiId);
+      setState(() {
+        organizedFollow = changedFollowed;
+      });
+    } else {
+      final changedFollowed = await service.followOrganizer(
+          widget.eventoCorrespondiente.organizerModel!.iD!, widget.frikiId);
+      setState(() {
+        organizedFollow = changedFollowed;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     getData();
     _isFollowed();
+    _organizerIsFollowed();
   }
 
   @override
@@ -194,8 +224,50 @@ class _EventPageState extends State<EventPage> {
                                 " " +
                                 widget.eventoCorrespondiente.organizerModel!
                                     .lASTNAMEORGANIZER!,
-                            style:
-                                TextStyle(fontSize: 20, color: Colors.black)),
+                            style: const TextStyle(
+                                fontSize: 20, color: Colors.black)),
+                        organizedFollow
+                            ? OutlinedButton(
+                                onPressed: () {
+                                  _changeOrganizeFollow();
+                                },
+                                child: Text(
+                                  "UnFollow",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    letterSpacing: 1,
+                                    color: Color.fromARGB(255, 209, 108, 14),
+                                  ),
+                                ),
+                                style: OutlinedButton.styleFrom(
+                                    side: BorderSide(
+                                        width: 2, color: Colors.purple),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 6),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(50))),
+                              )
+                            : ElevatedButton(
+                                onPressed: () {
+                                  _changeOrganizeFollow();
+                                },
+                                child: Text(
+                                  "Follow",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    letterSpacing: 2,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                    primary: Color.fromARGB(255, 209, 108, 14),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(50))),
+                              ),
                       ],
                     ),
 
@@ -250,7 +322,7 @@ class _EventPageState extends State<EventPage> {
         });
       },
       style: ElevatedButton.styleFrom(
-        primary: Color.fromARGB(255, 209, 108, 14),
+        primary: const Color.fromARGB(255, 209, 108, 14),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
         ),

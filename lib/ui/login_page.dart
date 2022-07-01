@@ -1,8 +1,11 @@
+import 'package:app_flutter_frikiteam/bloc/usuario/usuario_bloc.dart';
+import 'package:app_flutter_frikiteam/services/friki_service.dart';
 import 'package:app_flutter_frikiteam/services/organized_service.dart';
 import 'package:app_flutter_frikiteam/ui/friki_main.dart';
 import 'package:app_flutter_frikiteam/ui/organizer_main.dart';
 import 'package:app_flutter_frikiteam/ui/register_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -117,8 +120,8 @@ class _LoginPageState extends State<LoginPage> {
                           height: 15,
                         ),
                         Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 0),
                           decoration: BoxDecoration(
                             color: Colors.grey,
                             borderRadius: BorderRadius.circular(16),
@@ -143,49 +146,61 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(
                           height: 25,
                         ),
-                        Container(
-                          margin: EdgeInsets.only(left: 45, right: 45),
-                          child: RaisedButton(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 0, vertical: 8),
-                            color: Colors.deepOrange,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
-                            child: const Text(
-                              "Login",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
+                        BlocBuilder<UsuarioBloc, UsuarioState>(
+                          builder: (context, state) {
+                            return Container(
+                              margin: EdgeInsets.only(left: 45, right: 45),
+                              child: RaisedButton(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 0, vertical: 8),
+                                color: Colors.deepOrange,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: const Text(
+                                  "Login",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  _email = emailController.text;
+                                  _password = passwordController.text;
+
+                                  if (_userType == "Usuario Friki") {
+                                    try {
+                                      final serviceFriki = FrikiService();
+                                      final user = await serviceFriki
+                                          .loginFriki(_email, _password);
+                                      context
+                                          .read<UsuarioBloc>()
+                                          .add(LoginUserEvent(user, 'friki'));
+                                      Navigator.pushNamedAndRemoveUntil(
+                                          context, 'friki', ((route) => false));
+                                    } catch (e) {
+                                      print(e);
+                                    }
+                                  } else if (_userType == "Organizador") {
+                                    try {
+                                      final serviceOrganizer =
+                                          OrganizerService();
+                                      final user = await serviceOrganizer
+                                          .loginOrganizer(_email, _password);
+                                      print(user);
+                                      context.read<UsuarioBloc>().add(
+                                          LoginUserEvent(user, 'organizer'));
+                                      Navigator.pushNamedAndRemoveUntil(context,
+                                          'organizer', ((route) => false));
+                                    } catch (e) {
+                                      print(e);
+                                    }
+                                  } else {
+                                    print("Escoga un tipo de usuario");
+                                  }
+                                },
                               ),
-                            ),
-                            onPressed: () async {
-                              _email = emailController.text;
-                              _password = passwordController.text;
-                              print("Email: " + _email);
-                              print("Password: " + _password);
-                              print("User type: " + _userType);
-
-                              if (_userType == "Usuario Friki") {
-                                /*Navigator.of(context).pushNamed('/friki');*/
-                                Navigator.pushNamedAndRemoveUntil(
-                                    context, 'friki', ((route) => false));
-                                print("Vista usuario friki");
-                              } else if (_userType == "Organizador") {
-                                try {
-                                  final service = OrganizerService();
-                                  await service.saveToken(_email, _password);
-                                } catch (e) {
-                                  print('error al guardartoken');
-                                }
-
-                                Navigator.pushNamedAndRemoveUntil(
-                                    context, 'organizer', ((route) => false));
-                                print("Vista organizador");
-                              } else {
-                                print("Escoga un tipo de usuario");
-                              }
-                            },
-                          ),
+                            );
+                          },
                         ),
                         const SizedBox(
                           height: 3,

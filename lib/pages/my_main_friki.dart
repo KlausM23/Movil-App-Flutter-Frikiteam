@@ -1,3 +1,5 @@
+import 'package:app_flutter_frikiteam/model/event_model.dart';
+import 'package:app_flutter_frikiteam/model/friki_model.dart';
 import 'package:app_flutter_frikiteam/services/event_service.dart';
 import 'package:app_flutter_frikiteam/services/friki_service.dart';
 import 'package:app_flutter_frikiteam/ui/event.dart';
@@ -6,7 +8,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:app_flutter_frikiteam/model/Event.dart';
 
 class MyMainFriki extends StatefulWidget {
-  const MyMainFriki({Key? key}) : super(key: key);
+  final FrikiModel usuario;
+  const MyMainFriki(this.usuario, {Key? key}) : super(key: key);
   @override
   State<MyMainFriki> createState() => _MyMainFrikiState();
 }
@@ -18,35 +21,27 @@ class _MyMainFrikiState extends State<MyMainFriki> {
     "https://1.bp.blogspot.com/-RngT3BfKQ3o/WKuptzO7n9I/AAAAAAAATHQ/_XDpkzQl93AHSU13JlulZszjKSGnmXDDgCLcB/s1600/ban2.jpg",
     "https://i.ytimg.com/vi/N81TlsMT2so/maxresdefault.jpg"
   ];
-  List<Event> events = [
+  List<EventModel> events = [
     /*Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",10),
     Event("Otaku Fest", "https://i.ytimg.com/vi/_tI92lcuN7A/maxresdefault.jpg",30),
     Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",10),
     Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",20),*/
   ];
-  List<Event> eventsFollow = [];
   final _eventService = EventService();
   final _frikiService = FrikiService();
 
   void _getEvents() async {
-    final events = await _eventService.getAllEvents();
-    if (mounted)
+    final events = await _eventService.getEvents();
+    if (mounted) {
       setState(() {
         this.events = events;
       });
-  }
-  void _getEventsFollow() async {
-    final events = await _frikiService.getFollowEvents();
-    if (mounted)
-      setState(() {
-        eventsFollow = events;
-      });
+    }
   }
 
   @override
   void initState() {
     _getEvents();
-    _getEventsFollow();
     super.initState();
   }
 
@@ -98,7 +93,9 @@ class _MyMainFrikiState extends State<MyMainFriki> {
               /*height:  MediaQuery.of(context).size.height*0.36,*/
               child: GridView(
                 padding: const EdgeInsets.all(8),
-                children: events.map((e) => EventItem(this.eventsFollow,e)).toList(),
+                children: events
+                    .map((e) => EventItem(e, widget.usuario.iD!))
+                    .toList(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     childAspectRatio: 1.1,
@@ -120,48 +117,22 @@ class _MyMainFrikiState extends State<MyMainFriki> {
 }
 
 class EventItem extends StatelessWidget {
-  final Event event;
-  List<Event> eventsFollow;
-  EventItem(this.eventsFollow,this.event, {Key? key}) : super(key: key);
+  final EventModel event;
+  final int frikiId;
+  EventItem(this.event, this.frikiId, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        bool contains = false;
-        for (var i = 0; i < eventsFollow.length; i++) {
-          if (event.id == eventsFollow[i].id) contains = true;
-        }
-        if (contains) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => EventPage(
-                eventoCorrespondiente: event,
-                seguido: true,
-              ),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EventPage(
+              eventoCorrespondiente: event,
+              frikiId: frikiId,
             ),
-          );
-        } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => EventPage(
-                eventoCorrespondiente: event,
-                seguido: false,
-              ),
-            ),
-          );
-        }
-        /*Navigator.of(context).pushNamed('/event');*/
-        /*Navigator.push(
-            context,
-            MaterialPageRoute(
-                //TODO: aqui validar denuevo el seguido
-                builder: (context) => EventPage(
-                      eventoCorrespondiente: event,
-                      seguido: false,
-                    )));*/
-        //Navigator.pushNamed(context, 'event');
+          ),
+        );
       },
       child: AspectRatio(
         aspectRatio: 1 / 1,
@@ -169,7 +140,7 @@ class EventItem extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20)),
             image: DecorationImage(
-                image: NetworkImage(event.logo!), fit: BoxFit.fill),
+                image: NetworkImage(event.lOGO!), fit: BoxFit.fill),
           ),
           child: Container(
             padding: const EdgeInsets.all(20),
@@ -181,7 +152,7 @@ class EventItem extends StatelessWidget {
                 ])),
             child: Align(
               alignment: Alignment.bottomLeft,
-              child: Text(event.name!,
+              child: Text(event.nAMEEVENT!,
                   style: TextStyle(color: Colors.white, fontSize: 20)),
             ),
           ),

@@ -1,16 +1,19 @@
 import 'package:app_flutter_frikiteam/model/DescriptionEvent.dart';
 import 'package:app_flutter_frikiteam/model/Local.dart';
 import 'package:app_flutter_frikiteam/model/Organizer.dart';
+import 'package:app_flutter_frikiteam/model/event_model.dart';
 import 'package:app_flutter_frikiteam/services/event_information_service.dart';
+import 'package:app_flutter_frikiteam/services/event_service.dart';
+import 'package:app_flutter_frikiteam/services/friki_service.dart';
 import 'package:app_flutter_frikiteam/services/organized_service.dart';
 import 'package:flutter/material.dart';
 import 'package:app_flutter_frikiteam/model/Event.dart';
 
 class EventPage extends StatefulWidget {
-  Event eventoCorrespondiente;
-  bool seguido;
+  EventModel eventoCorrespondiente;
+  final int frikiId;
   EventPage(
-      {Key? key, required this.eventoCorrespondiente, required this.seguido})
+      {Key? key, required this.eventoCorrespondiente, required this.frikiId})
       : super(key: key);
 
   @override
@@ -19,6 +22,7 @@ class EventPage extends StatefulWidget {
 
 class _EventPageState extends State<EventPage> {
   bool assist = false;
+  bool organizedFollow = false;
   String titleEvent = "hola";
   String imgEvent =
       "https://portal.andina.pe/EDPfotografia3/Thumbnail/2022/03/08/000851626W.jpg";
@@ -32,47 +36,69 @@ class _EventPageState extends State<EventPage> {
   String nameOrganizer = "a";
   String lastNameOrganizer = "a";
   void getData() async {
-    /* Event event = new Event("Friki Festival",
-        "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg", 50.0);*/
-
-    /*titleEvent = event.title;
-    imgEvent = event.img;
-    priceEvent = event.price;*/
-
-    //DescriptionEvent descriptionEvent=new DescriptionEvent('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tristique velit ut viverra ornare. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nam facilisis egestas turpis, fringilla consequat sem egestas a. Vestibulum sed ante hendrerit, scelerisque tortor a, tincidunt leo. Maecenas eget arcu commodo, imperdiet lorem non, commodo nibh. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi libero nisl, mollis id accumsan vitae, rhoncus a nulla. Quisque vel mattis ex, a gravida erat. Nam euismod risus in elit blandit, ut porta eros eleifend. In posuere volutpat turpis a tempus.Morbi tincidunt tincidunt libero eget condimentum. Integer magna ipsum, consectetur in scelerisque at, pellentesque et nisi. Praesent facilisis aliquam purus non dignissim. Maecenas cursus orci ut luctus dignissim. Nunc sed mi egestas, dignissim odio imperdiet, viverra magna. Mauris id ante dolor. Sed congue eros eget egestas tincidunt. Nam at accumsan dui. Duis ac nisi et diam tincidunt efficitur eu sit amet justo. Ut ac ligula accumsan, vehicula urna a, commodo ante. Ut egestas urna at elit vehicula, vel rutrum erat tempor. Vivamus nec augue pretium, varius enim sed, faucibus velit. Praesent et neque quam.','https://firebasestorage.googleapis.com/v0/b/prueba-43bf8.appspot.com/o/images%2Ffriki%20festival%20informacion%201.jpg?alt=media&token=d6200696-0b53-4488-bd1a-9740c269112c');
-
-    /*description=descriptionEvent.description;
-     imgDescription=descriptionEvent.img;*/
-
     Local local = new Local("Plaza Mole del sur 760");
     localAddress = local.address;
   }
 
-  Future<DescriptionEvent> _getEvento() async {
-    final servicio = DescriptionEventService();
-    final DescriptionEvent evento =
-        await servicio.getEvent(widget.eventoCorrespondiente.id!);
-    print(evento.title);
-    return evento;
+  Future<void> _isFollowed() async {
+    final service = EventService();
+    final isFollowed = await service.eventIsFollowed(
+        widget.eventoCorrespondiente.iD!, widget.frikiId);
+    setState(() {
+      assist = isFollowed;
+    });
   }
 
-  Future<Organizer> _getOrganizer() async {
-    final service = OrganizerService();
-    final Organizer organizer = await service
-        .getSomeOrganized(widget.eventoCorrespondiente.organizerId!);
-    return organizer;
+  Future<void> _organizerIsFollowed() async {
+    final service = FrikiService();
+    final isFollowed = await service.organizerIsFollowed(
+        widget.eventoCorrespondiente.organizerModel!.iD!, widget.frikiId);
+    print(isFollowed);
+    setState(() {
+      organizedFollow = isFollowed;
+    });
   }
 
-  late Future<DescriptionEvent> dataFutureDescription;
-  late Future<Organizer> dataFutureOrganizer;
+  Future<void> _changeFollow() async {
+    final service = EventService();
+    if (assist == true) {
+      final changedFollowed = await service.unfollowEvente(
+          widget.eventoCorrespondiente.iD!, widget.frikiId);
+      setState(() {
+        assist = changedFollowed;
+      });
+    } else {
+      final changedFollowed = await service.followEvent(
+          widget.eventoCorrespondiente.iD!, widget.frikiId);
+      setState(() {
+        assist = changedFollowed;
+      });
+    }
+  }
+
+  Future<void> _changeOrganizeFollow() async {
+    final service = FrikiService();
+    if (organizedFollow == true) {
+      final changedFollowed = await service.unfollowOrganizer(
+          widget.eventoCorrespondiente.organizerModel!.iD!, widget.frikiId);
+      setState(() {
+        organizedFollow = changedFollowed;
+      });
+    } else {
+      final changedFollowed = await service.followOrganizer(
+          widget.eventoCorrespondiente.organizerModel!.iD!, widget.frikiId);
+      setState(() {
+        organizedFollow = changedFollowed;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    dataFutureOrganizer = _getOrganizer();
-    dataFutureDescription = _getEvento();
     getData();
-    assist = widget.seguido;
+    _isFollowed();
+    _organizerIsFollowed();
   }
 
   @override
@@ -100,7 +126,7 @@ class _EventPageState extends State<EventPage> {
           children: [
             _heroImage(),
             Container(
-              margin: EdgeInsets.only(top: 20),
+              margin: const EdgeInsets.only(top: 20),
               height: 60,
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -108,7 +134,7 @@ class _EventPageState extends State<EventPage> {
                 children: [
                   Center(
                       child: Text(
-                    widget.eventoCorrespondiente.name!,
+                    widget.eventoCorrespondiente.nAMEEVENT!,
                     style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
                   )),
                   Positioned(
@@ -117,9 +143,7 @@ class _EventPageState extends State<EventPage> {
                     child: assist
                         ? OutlinedButton(
                             onPressed: () {
-                              setState(() {
-                                assist = !assist;
-                              });
+                              _changeFollow();
                             },
                             child: Text(
                               "UnFollow",
@@ -138,10 +162,7 @@ class _EventPageState extends State<EventPage> {
                           )
                         : ElevatedButton(
                             onPressed: () {
-                              //TODO: hacer request de cambio
-                              setState(() {
-                                assist = !assist;
-                              });
+                              _changeFollow();
                             },
                             child: Text(
                               "Follow",
@@ -164,14 +185,6 @@ class _EventPageState extends State<EventPage> {
             ),
             Container(
               width: double.infinity,
-              color: const Color(0xFF65295F),
-              child: const Center(
-                  child: Text('Itinerario',
-                      style: TextStyle(fontSize: 20, color: Colors.white))),
-            ),
-            _itinerario(),
-            Container(
-              width: double.infinity,
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: Center(
                 child: Column(
@@ -180,58 +193,82 @@ class _EventPageState extends State<EventPage> {
                         style: TextStyle(fontSize: 20, color: Colors.black)),
                     const SizedBox(height: 20),
                     //TODO: aqui empieza el futurebuilder
-
-                    FutureBuilder<DescriptionEvent?>(
-                      future: dataFutureDescription,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          return Column(
-                            children: [
-                              Center(
-                                child: Text(
-                                  snapshot.data!.description!,
-                                  style: TextStyle(
-                                      letterSpacing: 1.1, height: 1.5),
-                                ),
-                              ),
-                              _promotionalImage(
-                                  snapshot.data!.image!.toString()),
-                            ],
-                          );
-                        } else {
-                          return const CircularProgressIndicator();
-                        }
-                      },
+                    Column(
+                      children: [
+                        Center(
+                          child: Text(
+                            widget.eventoCorrespondiente.dESCRIPTION!,
+                            style: TextStyle(letterSpacing: 1.1, height: 1.5),
+                          ),
+                        ),
+                        _promotionalImage(widget.eventoCorrespondiente.lOGO!),
+                      ],
                     ),
 
                     //TODO: AQUI TERMINA EL FUTUREBUILDER
-                    const Text('Ubicación',
+                    Text('Ubicación',
                         style: TextStyle(fontSize: 20, color: Colors.black)),
                     const SizedBox(height: 20),
-                    Text(widget.eventoCorrespondiente.information!),
+                    Text(widget.eventoCorrespondiente.aDDRESS!),
                     const SizedBox(height: 20),
                     const Text('Organizador',
                         style: TextStyle(fontSize: 20, color: Colors.black)),
-                    const SizedBox(height: 20),
-                    FutureBuilder<Organizer?>(
-                      future: dataFutureOrganizer,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          return Column(
-                            children: [
-                              _organizador(imageLogo: snapshot.data!.logo!),
-                              Text(
-                                  snapshot.data!.firstName! +
-                                      " " +
-                                      snapshot.data!.lastName!,
+                    Column(
+                      children: [
+                        _organizador(
+                            imageLogo: widget.eventoCorrespondiente
+                                .organizerModel!.iMAGEORGANIZER!),
+                        Text(
+                            widget.eventoCorrespondiente.organizerModel!
+                                    .nAMEORGANIZER! +
+                                " " +
+                                widget.eventoCorrespondiente.organizerModel!
+                                    .lASTNAMEORGANIZER!,
+                            style: const TextStyle(
+                                fontSize: 20, color: Colors.black)),
+                        organizedFollow
+                            ? OutlinedButton(
+                                onPressed: () {
+                                  _changeOrganizeFollow();
+                                },
+                                child: Text(
+                                  "UnFollow",
                                   style: TextStyle(
-                                      fontSize: 20, color: Colors.black)),
-                            ],
-                          );
-                        } else {
-                          return CircularProgressIndicator();
-                        }
-                      },
+                                    fontSize: 16,
+                                    letterSpacing: 1,
+                                    color: Color.fromARGB(255, 209, 108, 14),
+                                  ),
+                                ),
+                                style: OutlinedButton.styleFrom(
+                                    side: BorderSide(
+                                        width: 2, color: Colors.purple),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 6),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(50))),
+                              )
+                            : ElevatedButton(
+                                onPressed: () {
+                                  _changeOrganizeFollow();
+                                },
+                                child: Text(
+                                  "Follow",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    letterSpacing: 2,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                    primary: Color.fromARGB(255, 209, 108, 14),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(50))),
+                              ),
+                      ],
                     ),
 
                     const SizedBox(height: 30),
@@ -249,7 +286,7 @@ class _EventPageState extends State<EventPage> {
     return Container(
         height: 200,
         width: double.infinity,
-        child: Image.network(widget.eventoCorrespondiente.logo!,
+        child: Image.network(widget.eventoCorrespondiente.lOGO!,
             fit: BoxFit.cover));
   }
 
@@ -259,30 +296,6 @@ class _EventPageState extends State<EventPage> {
       height: 150,
       width: double.infinity,
       child: Image.network(img, fit: BoxFit.cover),
-    );
-  }
-
-  Widget _itinerario() {
-    return ListView.builder(
-      physics: const ScrollPhysics(parent: null),
-      shrinkWrap: true,
-      itemBuilder: (BuildContext context, int index) {
-        return _itemItinerario();
-      },
-      itemCount: 1,
-    );
-  }
-
-  Widget _itemItinerario() {
-    return Container(
-      width: double.infinity,
-      color: const Color(0xFF65295F),
-      child: Container(
-          margin: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-          child: Text(
-            'Aqui va un evento con fecha y hora',
-            style: TextStyle(color: Colors.white, fontSize: 13),
-          )),
     );
   }
 
@@ -309,7 +322,7 @@ class _EventPageState extends State<EventPage> {
         });
       },
       style: ElevatedButton.styleFrom(
-        primary: Color.fromARGB(255, 209, 108, 14),
+        primary: const Color.fromARGB(255, 209, 108, 14),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
         ),
@@ -334,7 +347,7 @@ class _EventPageState extends State<EventPage> {
           Column(
             children: [
               Text(
-                widget.eventoCorrespondiente.price.toString(),
+                widget.eventoCorrespondiente.pRICE!.toString(),
                 style:
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),

@@ -17,7 +17,6 @@ class AppRoutes {
     //'eventOrganizer': (BuildContext context) => const EventOrganizer(),
     'friki': (BuildContext context) => const MainFriki(),
     'organizer': (BuildContext context) => const MainOrganizer(),
-    'addEvent': (BuildContext context) => const AddEvent()
   };
   static onGeneratedRoute(RouteSettings settings) {
     return MaterialPageRoute(builder: (context) => const LoginPage());

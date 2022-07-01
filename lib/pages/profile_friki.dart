@@ -1,74 +1,66 @@
+import 'package:app_flutter_frikiteam/bloc/usuario/usuario_bloc.dart';
+import 'package:app_flutter_frikiteam/model/event_model.dart';
+import 'package:app_flutter_frikiteam/model/friki_model.dart';
+import 'package:app_flutter_frikiteam/model/organizer_model.dart';
 import 'package:app_flutter_frikiteam/pages/search_friki.dart';
+import 'package:app_flutter_frikiteam/services/event_service.dart';
 import 'package:app_flutter_frikiteam/services/friki_service.dart';
 import 'package:app_flutter_frikiteam/services/organized_service.dart';
 import 'package:app_flutter_frikiteam/ui/event.dart';
-import 'package:app_flutter_frikiteam/ui/login_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:app_flutter_frikiteam/model/Friki.dart';
-import 'package:app_flutter_frikiteam/model/Organizer.dart';
-import 'package:app_flutter_frikiteam/model/Event.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileFriki extends StatefulWidget {
-  const ProfileFriki({Key? key}) : super(key: key);
+  FrikiModel actualFriki;
+  ProfileFriki(this.actualFriki, {Key? key}) : super(key: key);
   @override
   State<ProfileFriki> createState() => _ProfileFrikiState();
 }
 
 class _ProfileFrikiState extends State<ProfileFriki> {
-  static List<Event> eventsFollow = [
-    /*Event("Friki Festival", "https://i.ytimg.com/vi/b3u8fSnCFzY/maxresdefault.jpg",20),
-    Event("Otaku Fest", "https://i.ytimg.com/vi/_tI92lcuN7A/maxresdefault.jpg",20),*/
-  ];
+  static List<EventModel> eventsFollow = [];
 
-  final _frikiService = FrikiService();
-
-  void _getEvents() async {
-    final events = await _frikiService.getFollowEvents();
-    if (mounted)
-      setState(() {
-        eventsFollow = events;
-      });
+  Future<FrikiModel> _editFriki(int id, String name, String lastname,
+      String email, String password, String image) async {
+    final service = FrikiService();
+    await service.updateFriki(
+        FrikiModel(
+            nAMEFRIKI: name,
+            eMAILFRIKI: email,
+            iMAGEFRIKI: image,
+            lASTNAMEFRIKI: lastname,
+            pASSWORDFRIKI: password),
+        id);
+    return await service.getFrikiById(id);
   }
 
-  //TODO:
-  void _editFriki() async {
-    final friki = await _frikiService.editFriki(Friki(
-        id: 25,
-        dateBirth: 0,
-        email: myControllerEmail.text,
-        firstName: myControllerName.text,
-        lastName: myControllerLastName.text,
-        logo:
-            'https://i.pinimg.com/originals/2c/67/80/2c678002e587299b3511cec86382daf1.jpg',
-        password: myControllerPassword.text));
-    setState(() {
-      nameEdit = friki.firstName!;
-      lastNameEdit = friki.lastName!;
-      emailEdit = friki.email!;
-      passwordEdit = friki.password!;
-    });
+  Future<void> _getOrganizesFollowed(int id) async {
+    if (mounted) {
+      try {
+        final service = OrganizerService();
+        organizers = await service.getFollowedOrganizers(id);
+        setState(() {});
+      } catch (e) {
+        throw Exception(e.toString());
+      }
+    }
   }
 
-  void _getFriki() async {
-    final friki = await _frikiService.getFriki();
-    setState(() {
-      nameEdit = friki.firstName!;
-      lastNameEdit = friki.lastName!;
-      emailEdit = friki.email!;
-      passwordEdit = friki.password!;
-      myControllerEmail.text = friki.email!;
-      myControllerPassword.text = friki.password!;
-      myControllerName.text = friki.firstName!;
-      myControllerLastName.text = friki.lastName!;
-    });
+  Future<void> _getEventsFollowed(int id) async {
+    try {
+      final service = EventService();
+      eventsFollow = await service.getFollowedEvents(id);
+      setState(() {});
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   @override
   void initState() {
-    _getEvents();
-    _getOrganizesFollowed();
-    _getFriki();
+    _getOrganizesFollowed(widget.actualFriki.iD!);
+    _getEventsFollowed(widget.actualFriki.iD!);
     super.initState();
   }
 
@@ -78,15 +70,7 @@ class _ProfileFrikiState extends State<ProfileFriki> {
   static String passwordEdit = '';
   static String nameEdit = '';
   static String lastNameEdit = '';
-  static List<Organizer> organizers = [];
-
-  Future<void> _getOrganizesFollowed() async {
-    final OrganizerService service = OrganizerService();
-    final response = await service.getOrganizesFollowed(25);
-    setState(() {
-      organizers = response;
-    });
-  }
+  static List<OrganizerModel> organizers = [];
 
   void setShowPassword() {
     showPassword = !showPassword;
@@ -107,152 +91,425 @@ class _ProfileFrikiState extends State<ProfileFriki> {
       width: double.infinity,
       height: double.infinity,
       child: Container(
-          padding: EdgeInsets.only(top: 5, bottom: 12, left: 10, right: 10),
-          width: MediaQuery.of(context).size.width,
-          color: Colors.white,
-          child: ListView(
-            children: [
-              Container(
-                  padding: EdgeInsets.only(right: 10),
-                  alignment: Alignment.topRight,
-                  /*Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context)=> const MainFriki())
-        );*/
-                  child: GestureDetector(
-                    onTap: () {
-                      /*Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context)=> const LoginPage())
-                  );*/
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, 'login', ((route) => false));
-                      /* Navigator.pop(context);*/
-                    },
-                    child: Icon(
-                      Icons.exit_to_app,
-                      color: Colors.red,
-                      size: 35,
-                    ),
-                  )),
-              Container(
-                padding: EdgeInsets.only(top: 5, bottom: 2),
-                width: MediaQuery.of(context).size.width,
-                alignment: Alignment.center,
-                child: Stack(
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.3,
-                      height: MediaQuery.of(context).size.width * 0.3,
-                      decoration: BoxDecoration(
-                          border: Border.all(width: 4, color: Colors.white),
-                          boxShadow: [
-                            BoxShadow(
-                              spreadRadius: 2.0,
-                              blurRadius: 10,
-                              color: Colors.black.withOpacity(0.2),
-                            )
-                          ],
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
+        padding: const EdgeInsets.only(top: 5, bottom: 12, left: 10, right: 10),
+        width: MediaQuery.of(context).size.width,
+        color: Colors.white,
+        child: BlocBuilder<UsuarioBloc, UsuarioState>(
+          builder: (context, state) {
+            if (state is UsuarioLoged) {
+              myControllerName =
+                  TextEditingController(text: state.usuario.nAMEFRIKI);
+              myControllerLastName =
+                  TextEditingController(text: state.usuario.lASTNAMEFRIKI);
+              myControllerEmail =
+                  TextEditingController(text: state.usuario.eMAILFRIKI);
+              myControllerPassword =
+                  TextEditingController(text: state.usuario.pASSWORDFRIKI);
+              return ListView(
+                children: [
+                  Container(
+                      padding: const EdgeInsets.only(right: 10),
+                      alignment: Alignment.topRight,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, 'login', ((route) => false));
+                        },
+                        child: const Icon(
+                          Icons.exit_to_app,
+                          color: Colors.red,
+                          size: 35,
+                        ),
+                      )),
+                  // usuario
+
+                  Container(
+                    padding: const EdgeInsets.only(top: 5, bottom: 2),
+                    width: MediaQuery.of(context).size.width,
+                    alignment: Alignment.center,
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          height: MediaQuery.of(context).size.width * 0.3,
+                          decoration: BoxDecoration(
+                            border: Border.all(width: 4, color: Colors.white),
+                            boxShadow: [
+                              BoxShadow(
+                                spreadRadius: 2.0,
+                                blurRadius: 10,
+                                color: Colors.black.withOpacity(0.2),
+                              )
+                            ],
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: NetworkImage(
-                                  'https://i.pinimg.com/originals/2c/67/80/2c678002e587299b3511cec86382daf1.jpg'))),
-                      alignment: Alignment.center,
-                    ),
-                    Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(width: 4, color: Colors.white),
-                              color: Colors.blue,
+                              image: NetworkImage(state.usuario.iMAGEFRIKI!),
                             ),
-                            child: GestureDetector(
-                              child: Icon(
-                                Icons.edit,
-                                color: Colors.white,
-                              ),
-                              onTap: () {
-                                edit = !edit;
-                                setState(() {
-                                  myControllerEmail =
-                                      TextEditingController(text: emailEdit);
-                                  myControllerPassword =
-                                      TextEditingController(text: passwordEdit);
-                                  myControllerName =
-                                      TextEditingController(text: nameEdit);
-                                  myControllerLastName =
-                                      TextEditingController(text: lastNameEdit);
-                                  showPassword = false;
-                                });
-                              },
-                            ))),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                  child: edit == true
-                      ? inputs()
-                      : Text(
-                          nameEdit + " " + lastNameEdit,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 18),
-                        )),
-              SizedBox(
-                height: 20,
-              ),
-              Text("Organizadores Seguidos",
-                  style: TextStyle(
-                      color: Colors.purple,
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold)),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.12,
-                color: Colors.purple,
-                padding: EdgeInsets.only(top: 5, bottom: 5),
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    final _organizer = organizers[index];
-                    return imageOrganizer(organizers[index].logo!);
-                  },
-                  itemCount: organizers.length,
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text("Eventos Seguidos",
-                  style: TextStyle(
-                      color: Colors.purple,
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold)),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  child: ListView.builder(
+                          ),
+                          alignment: Alignment.center,
+                        ),
+                        Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border:
+                                      Border.all(width: 4, color: Colors.white),
+                                  color: Colors.blue,
+                                ),
+                                child: GestureDetector(
+                                  child: const Icon(
+                                    Icons.edit,
+                                    color: Colors.white,
+                                  ),
+                                  onTap: () {
+                                    edit = !edit;
+                                    setState(() {
+                                      myControllerEmail = TextEditingController(
+                                          text: emailEdit);
+                                      myControllerPassword =
+                                          TextEditingController(
+                                              text: passwordEdit);
+                                      myControllerName =
+                                          TextEditingController(text: nameEdit);
+                                      myControllerLastName =
+                                          TextEditingController(
+                                              text: lastNameEdit);
+                                      showPassword = false;
+                                    });
+                                  },
+                                ))),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                      child: edit == true
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Name:",
+                                    style: TextStyle(
+                                      color: Colors.black45,
+                                      fontSize: 20,
+                                    )),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  decoration: BoxDecoration(
+                                      color: Color(0xFFC6C6C6),
+                                      borderRadius: BorderRadius.circular(15),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black26,
+                                          blurRadius: 2,
+                                          offset: Offset(0, 2),
+                                        )
+                                      ]),
+                                  height: 50,
+                                  child: TextField(
+                                    keyboardType: TextInputType.name,
+                                    controller: myControllerName,
+                                    cursorColor: Colors.purple,
+                                    style: TextStyle(color: Colors.black),
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      contentPadding: EdgeInsets.only(top: 14),
+                                      prefixIcon: Icon(Icons.account_circle,
+                                          color: Colors.purple),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text("Last Name:",
+                                    style: TextStyle(
+                                      color: Colors.black45,
+                                      fontSize: 20,
+                                    )),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  decoration: BoxDecoration(
+                                      color: Color(0xFFC6C6C6),
+                                      borderRadius: BorderRadius.circular(15),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black26,
+                                          blurRadius: 2,
+                                          offset: Offset(0, 2),
+                                        )
+                                      ]),
+                                  height: 50,
+                                  child: TextField(
+                                    keyboardType: TextInputType.name,
+                                    controller: myControllerLastName,
+                                    cursorColor: Colors.purple,
+                                    style: TextStyle(color: Colors.black),
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      contentPadding: EdgeInsets.only(top: 14),
+                                      prefixIcon: Icon(Icons.account_circle,
+                                          color: Colors.purple),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text("Email:",
+                                    style: TextStyle(
+                                      color: Colors.black45,
+                                      fontSize: 20,
+                                    )),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  decoration: BoxDecoration(
+                                      color: Color(0xFFC6C6C6),
+                                      borderRadius: BorderRadius.circular(15),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black26,
+                                          blurRadius: 2,
+                                          offset: Offset(0, 2),
+                                        )
+                                      ]),
+                                  height: 50,
+                                  child: TextField(
+                                    keyboardType: TextInputType.emailAddress,
+                                    controller: myControllerEmail,
+                                    cursorColor: Colors.purple,
+                                    style: TextStyle(color: Colors.black),
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      contentPadding: EdgeInsets.only(top: 14),
+                                      prefixIcon: Icon(Icons.email,
+                                          color: Colors.purple),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text("Contraseña:",
+                                    style: TextStyle(
+                                      color: Colors.black45,
+                                      fontSize: 20,
+                                    )),
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  decoration: BoxDecoration(
+                                      color: Color(0xFFC6C6C6),
+                                      borderRadius: BorderRadius.circular(15),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black26,
+                                          blurRadius: 2,
+                                          offset: Offset(0, 2),
+                                        )
+                                      ]),
+                                  height: 50,
+                                  child: TextField(
+                                    obscureText: !showPassword,
+                                    keyboardType: TextInputType.visiblePassword,
+                                    enableSuggestions: false,
+                                    autocorrect: false,
+                                    controller: myControllerPassword,
+                                    cursorColor: Colors.purple,
+                                    style: TextStyle(color: Colors.black),
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        contentPadding:
+                                            EdgeInsets.only(top: 14),
+                                        prefixIcon: Icon(Icons.lock,
+                                            color: Colors.purple),
+                                        suffixIcon: IconButton(
+                                          icon: !showPassword
+                                              ? Icon(Icons.visibility_off)
+                                              : Icon(Icons.visibility),
+                                          onPressed: setShowPassword,
+                                        )),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    OutlinedButton(
+                                      onPressed: () {
+                                        edit = !edit;
+                                        setState(() {
+                                          myControllerName =
+                                              TextEditingController(
+                                                  text:
+                                                      state.usuario.nAMEFRIKI);
+                                          myControllerLastName =
+                                              TextEditingController(
+                                                  text: state
+                                                      .usuario.lASTNAMEFRIKI);
+                                          myControllerEmail =
+                                              TextEditingController(
+                                                  text:
+                                                      state.usuario.eMAILFRIKI);
+                                          myControllerPassword =
+                                              TextEditingController(
+                                                  text: state
+                                                      .usuario.pASSWORDFRIKI);
+                                          showPassword = false;
+                                        });
+                                      },
+                                      child: const Text(
+                                        "Cancel",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          letterSpacing: 2,
+                                          color: Colors.purple,
+                                        ),
+                                      ),
+                                      style: OutlinedButton.styleFrom(
+                                          side: BorderSide(
+                                              width: 2, color: Colors.purple),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 50),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(50))),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        edit = !edit;
+                                        try {
+                                          final frikiEdited = await _editFriki(
+                                              state.usuario.iD,
+                                              myControllerName.text,
+                                              myControllerLastName.text,
+                                              myControllerEmail.text,
+                                              myControllerPassword.text,
+                                              state.usuario.iMAGEFRIKI);
+                                          context.read<UsuarioBloc>().add(
+                                              LoginUserEvent(
+                                                  frikiEdited, 'friki'));
+                                          myControllerName =
+                                              TextEditingController(
+                                                  text:
+                                                      state.usuario.nAMEFRIKI);
+                                          myControllerLastName =
+                                              TextEditingController(
+                                                  text: state
+                                                      .usuario.lASTNAMEFRIKI);
+                                          myControllerEmail =
+                                              TextEditingController(
+                                                  text:
+                                                      state.usuario.eMAILFRIKI);
+                                          myControllerPassword =
+                                              TextEditingController(
+                                                  text: state
+                                                      .usuario.pASSWORDFRIKI);
+                                          showPassword = false;
+                                          setState(() {});
+                                        } catch (e) {
+                                          print(e);
+                                        }
+                                      },
+                                      child: const Text(
+                                        "Save",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          letterSpacing: 2,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                          primary: Colors.purple,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 50),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(50))),
+                                    )
+                                  ],
+                                )
+                              ],
+                            )
+                          : Text(
+                              state.usuario.nAMEFRIKI +
+                                  " " +
+                                  state.usuario.lASTNAMEFRIKI,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(fontSize: 18),
+                            )),
+                  //ANYTHING ELSE
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text("Organizadores Seguidos",
+                      style: TextStyle(
+                          color: Colors.purple,
+                          fontSize: 25.0,
+                          fontWeight: FontWeight.bold)),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.12,
+                    color: Colors.purple,
+                    padding: const EdgeInsets.only(top: 5, bottom: 5),
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
-                        final event = eventsFollow[index];
-                        /*return EventListItem(eventsFollow, event);*/
-                        return EventFollowItem(event);
+                        return imageOrganizer(
+                            organizers[index].iMAGEORGANIZER!);
                       },
-                      itemCount: eventsFollow.length)),
-            ],
-          )),
+                      itemCount: organizers.length,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text("Eventos Seguidos",
+                      style: TextStyle(
+                          color: Colors.purple,
+                          fontSize: 25.0,
+                          fontWeight: FontWeight.bold)),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.2,
+                      child: ListView.builder(
+                          itemBuilder: (context, index) {
+                            final event = eventsFollow[index];
+                            return EventFollowItem(
+                                event, widget.actualFriki.iD!);
+                          },
+                          itemCount: eventsFollow.length)),
+                ],
+              );
+            }
+            return const CircularProgressIndicator();
+          },
+        ),
+      ),
     );
   }
 
@@ -442,7 +699,7 @@ class _ProfileFrikiState extends State<ProfileFriki> {
             ElevatedButton(
               onPressed: () {
                 edit = !edit;
-                _editFriki();
+                //_editFriki();
               },
               child: Text(
                 "Save",
@@ -466,8 +723,9 @@ class _ProfileFrikiState extends State<ProfileFriki> {
 }
 
 class EventFollowItem extends StatelessWidget {
-  final Event event;
-  EventFollowItem(this.event, {Key? key}) : super(key: key);
+  final int frikiId;
+  final EventModel event;
+  EventFollowItem(this.event, this.frikiId, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -476,10 +734,8 @@ class EventFollowItem extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => EventPage(
-              eventoCorrespondiente: event,
-              seguido: true,
-            ),
+            builder: (context) =>
+                EventPage(eventoCorrespondiente: event, frikiId: frikiId),
           ),
         );
       },
@@ -489,7 +745,7 @@ class EventFollowItem extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
           image: DecorationImage(
-              image: NetworkImage(event.logo!), fit: BoxFit.fill),
+              image: NetworkImage(event.lOGO!), fit: BoxFit.fill),
         ),
         child: Container(
           padding: const EdgeInsets.all(20),
@@ -501,7 +757,7 @@ class EventFollowItem extends StatelessWidget {
                   colors: [Colors.black.withOpacity(0.7), Colors.transparent])),
           child: Align(
             alignment: Alignment.bottomCenter,
-            child: Text(event.name!,
+            child: Text(event.nAMEEVENT!,
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 15,
